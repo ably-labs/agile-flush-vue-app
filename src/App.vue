@@ -1,12 +1,16 @@
 <template>
   <div>
     <h1>Planning Poker</h1>
+    <p>Invite your team members by copying the url and start voting 🚀!</p>
+    <p>Once everyone has submitted their vote, click the button to show the results.</p>
+        <button @click="toggleResults">{{showResults ? 'Hide votes' : 'Show votes'}}</button>
     <ul>
-      <li class="cardlist" v-for="card in cards" :key="card">
-        <code>{{ card.visual }}</code>
-        <p v-if="showResults">0</p>
+      <li class="cardlist" v-for="card in cards" :key="card.number">
+        <code @click="vote(card.number)">{{ card.visual }}</code>
+        <p v-if="showResults">{{card.count}}</p>
         </li>
     </ul>
+
   </div>
 </template>
 
@@ -16,10 +20,11 @@ export default {
   data() {
     return {
       value: "World!!",
-      showResults: true,
+      showResults: false,
       cards: [
         {
           number: "0",
+          count: 0,
           visual: `
  .----------------. 
 | .--------------. |
@@ -35,6 +40,7 @@ export default {
         },
         {
           number: "1",
+          count: 0,
           visual: `
  .----------------.
 | .--------------. |
@@ -50,6 +56,7 @@ export default {
         },
         {
           number: "2",
+          count: 0,
           visual: `
  .----------------. 
 | .--------------. |
@@ -65,6 +72,7 @@ export default {
         },
         {
           number: "3",
+          count: 0,
           visual: `
  .----------------. 
 | .--------------. |
@@ -80,6 +88,7 @@ export default {
         },
         {
           number: "5",
+          count: 0,
           visual: `
  .----------------. 
 | .--------------. |
@@ -95,6 +104,7 @@ export default {
         },
         {
           number: "8",
+          count: 0,
           visual: `
  .----------------. 
 | .--------------. |
@@ -110,6 +120,7 @@ export default {
         },
         {
           number: "13",
+          count: 0,
           visual: `
  .--------------------------.
 | .------------------------. |
@@ -125,6 +136,7 @@ export default {
         },
         {
           number: "21",
+          count: 0,
           visual: `
  .--------------------------.
 | .------------------------. |
@@ -140,12 +152,20 @@ export default {
         },
       ]
     };
+  },
+  methods: {
+    toggleResults() {
+      this.showResults = !this.showResults;
+    },
+    vote(cardNumber) {
+      this.cards[cardNumber].count++;
+    }
   }
 };
 </script>
 <style>
   body {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Courier New', monospace;
     white-space: pre;
   }
 
