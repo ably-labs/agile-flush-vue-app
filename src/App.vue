@@ -2,15 +2,20 @@
   <div>
     <h1>Planning Poker</h1>
     <p>Invite your team members by copying the url and start voting 🚀!</p>
-    <p>Once everyone has submitted their vote, click the button to show the results.</p>
-        <button @click="toggleResults">{{showResults ? 'Hide votes' : 'Show votes'}}</button>
-    <ul>
-      <li class="cardlist" v-for="card in cards" :key="card.number">
-        <code @click="vote(card.number)">{{ card.visual }}</code>
-        <p v-if="showResults">{{card.count}}</p>
-        </li>
-    </ul>
-
+    <p>
+      Once everyone has submitted their vote, click the button to show the
+      results.
+    </p>
+    <button @click="toggleResults">
+      {{ showResults ? "Hide votes" : "Show votes" }}
+    </button>
+    <h2>Cards</h2>
+    <div class="cardlist">
+      <div class="card" v-for="(card, index) in cards" :key="card.number" :id="card.number" @click="vote(index, card.number)">
+        <p :class="{'selected' : selected === card.number}">{{ card.visual }}</p>
+        <p class="votecount" v-if="showResults">{{ card.count }}</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -19,14 +24,13 @@ export default {
   name: "App",
   data() {
     return {
-      value: "World!!",
+      selected: null,
       showResults: false,
       cards: [
         {
           number: "0",
           count: 0,
-          visual: `
- .----------------. 
+          visual: ` .----------------. 
 | .--------------. |
 | |     ____     | |
 | |   .'    '.   | |
@@ -36,13 +40,12 @@ export default {
 | |   '.____.'   | |
 | |              | |
 | '--------------' |
- '----------------'`
+ '----------------'`,
         },
         {
           number: "1",
           count: 0,
-          visual: `
- .----------------.
+          visual: ` .----------------.
 | .--------------. |
 | |     __       | |
 | |    /  |      | |
@@ -52,13 +55,12 @@ export default {
 | |   |_____|    | |
 | |              | |
 | '--------------' |
- '----------------'`
+ '----------------'`,
         },
         {
           number: "2",
           count: 0,
-          visual: `
- .----------------. 
+          visual: ` .----------------. 
 | .--------------. |
 | |    _____     | |
 | |   / ___ '.   | |
@@ -68,13 +70,12 @@ export default {
 | |  |_______|   | |
 | |              | |
 | '--------------' |
- '----------------'`
+ '----------------'`,
         },
         {
           number: "3",
           count: 0,
-          visual: `
- .----------------. 
+          visual: ` .----------------. 
 | .--------------. |
 | |    ______    | |
 | |   / ____ '.  | |
@@ -84,13 +85,12 @@ export default {
 | |   \\______.'  | |
 | |              | |
 | '--------------' |
- '----------------'`
+ '----------------'`,
         },
         {
           number: "5",
           count: 0,
-          visual: `
- .----------------. 
+          visual: ` .----------------. 
 | .--------------. |
 | |   _______    | |
 | |  |  _____|   | |
@@ -100,13 +100,12 @@ export default {
 | |   \\______.'  | |
 | |              | |
 | '--------------' |
- '----------------'`
+ '----------------'`,
         },
         {
           number: "8",
           count: 0,
-          visual: `
- .----------------. 
+          visual: ` .----------------. 
 | .--------------. |
 | |     ____     | |
 | |   .' __ '.   | |
@@ -116,13 +115,12 @@ export default {
 | |  '.______.'  | |
 | |              | |
 | '--------------' |
- '----------------'`
+ '----------------'`,
         },
         {
           number: "13",
           count: 0,
-          visual: `
- .--------------------------.
+          visual: ` .--------------------------.
 | .------------------------. |
 | |     __      ______     | |
 | |    /  |    / ____ '.   | |
@@ -132,13 +130,12 @@ export default {
 | |   |_____|  \\______.'   | |
 | |                        | |
 | '------------------------' |
- '--------------------------'`
+ '--------------------------'`,
         },
         {
           number: "21",
           count: 0,
-          visual: `
- .--------------------------.
+          visual: ` .--------------------------.
 | .------------------------. |
 | |     _____      __      | |
 | |    / ___ '.   /  |     | |
@@ -148,31 +145,53 @@ export default {
 | |   |_______|  |_____|   | |
 | |                        | |
 | '------------------------' |
- '--------------------------'`
+ '--------------------------'`,
         },
-      ]
+      ],
     };
   },
   methods: {
     toggleResults() {
       this.showResults = !this.showResults;
     },
-    vote(cardNumber) {
-      this.cards[cardNumber].count++;
-    }
-  }
+    vote(cardIndex, number) {
+      this.selected = number;
+      this.cards[cardIndex].count++;
+    },
+  },
 };
 </script>
+
 <style>
-  body {
-    font-family: 'Courier New', monospace;
-    white-space: pre;
-  }
+body {
+  font-family: "Courier New", monospace;
+}
 
-  .cardlist {
-    list-style: none;
-    display: inline-block;
-    text-align: center;
-  }
+.cardlist {
+  flex-direction: row;
+  flex-flow: row wrap;
+  display: flex;
+}
 
+.card > p {
+  margin: 0px;
+  white-space: pre;
+}
+
+.votecount {
+  text-align: center;
+}
+
+.card:hover {
+  font-weight: bold;
+}
+
+.selected {
+  font-weight: bold;
+  color: red;
+}
+
+button {
+  font-family: "Courier New", monospace;
+}
 </style>
