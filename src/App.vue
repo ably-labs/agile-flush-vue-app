@@ -21,18 +21,16 @@
       <h3>Cards</h3>
       <p>Click on a card to vote. To undo your vote, click the card again.</p>
       <div class="cardlist">
-        <div
+        <CardDetails
           class="card"
-          v-for="(card, index) in cards"
+          v-for="card in cards"
           :key="card.number"
-          :id="card.number"
-          @click="vote(index, card.number)"
-        >
-          <p :class="{ selected: selected === card.number }">
-            {{ card.visual }}
-          </p>
-          <p class="votecount" v-if="showResults">{{ card.count }}</p>
-        </div>
+          :card="card"
+          :isCardSelected="isCardSelected"
+          :showResults="showResults"
+          @selectCard="vote"
+          @deselectCard="vote"
+        />
       </div>
     </div>
     <p>
@@ -43,15 +41,19 @@
 
 <script>
 import { generateName } from "./util/nameGenerator.js";
-import { LinkGenerator } from "./util/linkGenerator.js";
+import CardDetails from "./components/CardDetails.vue";
 
 export default {
   name: "App",
+  components: {
+    CardDetails,
+  },
   data() {
     return {
       sessionId: this.$route.query.sessionId,
-      sessionStarted: this.sessionId !== null,
-      selected: null,
+      sessionStarted: this.sessionId !== null && this.sessionId !== undefined,
+      isCardSelected: false,
+      selectedCard: null,
       showResults: false,
       cards: [
         {
@@ -184,24 +186,30 @@ export default {
     startSession() {
       this.sessionId = generateName();
       this.sessionStarted = true;
-      this.$router.push({ path: '/', query: { sessionId: this.sessionId } })
+      this.selectedCard = null;
+      this.cards.forEach(card => {
+        card.count = 0;
+      });
+      this.showResults = false;
+      this.$children.forEach(child => {
+        child.reset();
+      });
+      this.$router.push({ path: "/", query: { sessionId: this.sessionId } });
     },
-    vote(cardIndex, number) {
-      if (this.selected === null) {
-        this.selected = number;
-        this.cards[cardIndex].count++;
-      } else if (this.selected === number) {
-        this.selected = null;
-        this.cards[cardIndex].count--;
+    vote(number) {
+      if (this.isCardSelected === false) {
+        this.isCardSelected = true;
+        this.selectedCard = number;
+        let index = this.cards.findIndex(card => card.number === number)
+        this.cards[index].count++;
+      } else {
+        this.isCardSelected = false;
+        this.selectedCard = null;
+        let index = this.cards.findIndex(card => card.number === number)
+        this.cards[index].count--;
       }
     },
   },
-  computed: {
-    inviteLink: function () {
-      const linkGenerator = new LinkGenerator(window.location);
-      return linkGenerator.linkTo({ sessionId: this.sessionId });
-    }
-  }
 };
 </script>
 
@@ -214,26 +222,6 @@ body {
   flex-direction: row;
   flex-flow: row wrap;
   display: flex;
-}
-
-.card > p {
-  margin: 0px;
-  white-space: pre;
-  border-radius: 10px;
-}
-
-.votecount {
-  text-align: center;
-}
-
-.card:hover {
-  font-weight: bold;
-}
-
-.selected {
-  font-weight: bold;
-  color: white;
-  background-color: #e40000;
 }
 
 a {
