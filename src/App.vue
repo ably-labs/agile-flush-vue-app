@@ -22,6 +22,7 @@
         <p class="votecount" v-if="showResults">{{ card.count }}</p>
       </div>
     </div>
+    <p>Powered by <a href="https://www.ably.com" target="_blank">ably.com</a>.</p>
   </div>
 </template>
 
@@ -199,7 +200,11 @@ body {
 
 .selected {
   font-weight: bold;
-  color: red;
+  color: #e40000;
+}
+
+a {
+  color: #e40000
 }
 
 button {
