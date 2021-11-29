@@ -10,6 +10,7 @@
       {{ showResults ? "Hide votes" : "Show votes" }}
     </button>
     <h2>Cards</h2>
+    <p>Click on a card to vote. To undo your vote, click the card again.</p>
     <div class="cardlist">
       <div
         class="card"
@@ -188,6 +189,7 @@ body {
 .card > p {
   margin: 0px;
   white-space: pre;
+  border-radius: 10px;
 }
 
 .votecount {
@@ -200,7 +202,8 @@ body {
 
 .selected {
   font-weight: bold;
-  color: #e40000;
+  color: white;
+  background-color: #e40000;
 }
 
 a {
