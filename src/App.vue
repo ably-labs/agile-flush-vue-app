@@ -10,7 +10,7 @@
       {{ sessionStarted ? "Start new session" : "Start session" }}
     </button>
     <div v-if="sessionStarted">
-      <h2>Session: {{ inviteLink }}</h2>
+      <h2>Session: {{ sessionId }}</h2>
       <p>
         Once everyone has submitted their vote, click the button to show the
         results.
@@ -44,14 +44,13 @@
 <script>
 import { generateName } from "./util/nameGenerator.js";
 import { LinkGenerator } from "./util/linkGenerator.js";
-const urlParams = new URLSearchParams(location.search);
-const querySessionId = urlParams.get("sessionId");
+
 export default {
   name: "App",
   data() {
     return {
-      sessionStarted: false,
-      sessionId: querySessionId || generateName(),
+      sessionId: this.$route.query.sessionId,
+      sessionStarted: this.sessionId !== null,
       selected: null,
       showResults: false,
       cards: [
@@ -183,8 +182,9 @@ export default {
       this.showResults = !this.showResults;
     },
     startSession() {
+      this.sessionId = generateName();
       this.sessionStarted = true;
-      this.$router.push({ path: '', query: { sessionId: this.sessionId } })
+      this.$router.push({ path: '/', query: { sessionId: this.sessionId } })
     },
     vote(cardIndex, number) {
       if (this.selected === null) {

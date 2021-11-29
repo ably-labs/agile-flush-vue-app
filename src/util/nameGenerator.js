@@ -1,3 +1,17 @@
+export function generateName() {
+  const names = [];
+  const randomAdjective1 = randomFrom(adjectives);
+  const randomAdjective2 = randomFrom(adjectives);
+  const noun = randomFrom(nouns);
+  names.push(randomAdjective1, randomAdjective2, noun);
+
+  return names.join("-");
+}
+
+function randomFrom(collection) {
+  return collection[Math.floor(Math.random() * collection.length)];
+}
+
 const adjectives = [
   "aback",
   "abaft",
@@ -3466,19 +3480,3 @@ const nouns = [
   "zoo",
   "zoology",
 ];
-
-function randomFrom(collection) {
-  return collection[Math.floor(Math.random() * collection.length)];
-}
-
-function generateName() {
-  const names = [];
-  const randomAdjective1 = randomFrom(adjectives);
-  const randomAdjective2 = randomFrom(adjectives);
-  const noun = randomFrom(nouns);
-  names.push(randomAdjective1, randomAdjective2, noun);
-
-  return names.join("-");
-}
-
-module.exports = { generateName };
