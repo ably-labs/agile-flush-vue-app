@@ -11,8 +11,14 @@
     </button>
     <h2>Cards</h2>
     <div class="cardlist">
-      <div class="card" v-for="(card, index) in cards" :key="card.number" :id="card.number" @click="vote(index, card.number)">
-        <p :class="{'selected' : selected === card.number}">{{ card.visual }}</p>
+      <div
+        class="card"
+        v-for="(card, index) in cards"
+        :key="card.number"
+        :id="card.number"
+        @click="vote(index, card.number)"
+      >
+        <p :class="{ selected: selected === card.number }">{{ card.visual }}</p>
         <p class="votecount" v-if="showResults">{{ card.count }}</p>
       </div>
     </div>
@@ -155,8 +161,13 @@ export default {
       this.showResults = !this.showResults;
     },
     vote(cardIndex, number) {
-      this.selected = number;
-      this.cards[cardIndex].count++;
+      if (this.selected === null) {
+        this.selected = number;
+        this.cards[cardIndex].count++;
+      } else if (this.selected === number) {
+        this.selected = null;
+        this.cards[cardIndex].count--;
+      }
     },
   },
 };
