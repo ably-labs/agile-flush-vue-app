@@ -24,7 +24,7 @@
       <div class="cardlist">
         <CardDetails
           class="card"
-          v-for="card in cards"
+          v-for="card in this.$store.state.cards"
           :key="card.number"
           :card="card"
           :isAnyCardSelected="isAnyCardSelected"
@@ -62,136 +62,6 @@ export default {
       showResults: false,
       nrOfPeopleJoined: 0,
       nrOfPeopleVoted: 0,
-      cards: [
-        {
-          number: "0",
-          count: 0,
-          isSelected: false,
-          visual: ` .----------------. 
-| .--------------. |
-| |     ____     | |
-| |   .'    '.   | |
-| |  |  .--.  |  | |
-| |  | |    | |  | |
-| |  |  '--'  |  | |
-| |   '.____.'   | |
-| |              | |
-| '--------------' |
- '----------------'`,
-        },
-        {
-          number: "1",
-          count: 0,
-          isSelected: false,
-          visual: ` .----------------.
-| .--------------. |
-| |     __       | |
-| |    /  |      | |
-| |    '| |      | |
-| |     | |      | |
-| |    _| |_     | |
-| |   |_____|    | |
-| |              | |
-| '--------------' |
- '----------------'`,
-        },
-        {
-          number: "2",
-          count: 0,
-          isSelected: false,
-          visual: ` .----------------. 
-| .--------------. |
-| |    _____     | |
-| |   / ___ '.   | |
-| |  |_/___) |   | |
-| |   .'____.'   | |
-| |  / /____     | |
-| |  |_______|   | |
-| |              | |
-| '--------------' |
- '----------------'`,
-        },
-        {
-          number: "3",
-          count: 0,
-          isSelected: false,
-          visual: ` .----------------. 
-| .--------------. |
-| |    ______    | |
-| |   / ____ '.  | |
-| |   ''  __) |  | |
-| |   _  |__ '.  | |
-| |  | |____) |  | |
-| |   \\______.'  | |
-| |              | |
-| '--------------' |
- '----------------'`,
-        },
-        {
-          number: "5",
-          count: 0,
-          isSelected: false,
-          visual: ` .----------------. 
-| .--------------. |
-| |   _______    | |
-| |  |  _____|   | |
-| |  | |____     | |
-| |  '_.____''.  | |
-| |  | \\____) |  | |
-| |   \\______.'  | |
-| |              | |
-| '--------------' |
- '----------------'`,
-        },
-        {
-          number: "8",
-          count: 0,
-          isSelected: false,
-          visual: ` .----------------. 
-| .--------------. |
-| |     ____     | |
-| |   .' __ '.   | |
-| |   | (__) |   | |
-| |   .'____'.   | |
-| |  | (____) |  | |
-| |  '.______.'  | |
-| |              | |
-| '--------------' |
- '----------------'`,
-        },
-        {
-          number: "13",
-          count: 0,
-          isSelected: false,
-          visual: ` .--------------------------.
-| .------------------------. |
-| |     __      ______     | |
-| |    /  |    / ____ '.   | |
-| |    '| |    ''  __) |   | |
-| |     | |    _  |__ '.   | |
-| |    _| |_  | |____) |   | |
-| |   |_____|  \\______.'   | |
-| |                        | |
-| '------------------------' |
- '--------------------------'`,
-        },
-        {
-          number: "21",
-          count: 0,
-          isSelected: false,
-          visual: ` .--------------------------.
-| .------------------------. |
-| |     _____      __      | |
-| |    / ___ '.   /  |     | |
-| |   |_/___) |   '| |     | |
-| |    .'____.'    | |     | |
-| |   / /____     _| |_    | |
-| |   |_______|  |_____|   | |
-| |                        | |
-| '------------------------' |
- '--------------------------'`,
-        },
-      ],
     };
   },
   methods: {
@@ -204,7 +74,7 @@ export default {
       this.selectedCard = null;
       this.isAnyCardSelected = false;
       this.nrOfPeopleVoted = 0;
-      this.cards.forEach(card => {
+      this.$store.state.cards.forEach(card => {
         card.count = 0;
         card.isSelected = false;
       });
@@ -212,17 +82,14 @@ export default {
       this.$router.push({ path: "/", query: { sessionId: this.sessionId } });
     },
     vote(number) {
-      let index = this.cards.findIndex(card => card.number === number)
       if (this.isAnyCardSelected === false) {
         this.isAnyCardSelected = true;
         this.selectedCard = number;
-        this.cards[index].count++;
-        this.cards[index].isSelected=true;
+        this.$store.commit('selectCard', number);
       } else {
         this.isAnyCardSelected = false;
         this.selectedCard = null;
-        this.cards[index].count--;
-        this.cards[index].isSelected=false;
+        this.$store.commit('deselectCard', number);
       }
     },
   },
