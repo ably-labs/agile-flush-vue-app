@@ -1,13 +1,9 @@
 <template>
-    <p>Joined: {{ nrOfPeople }}</p>
+    <p>Number of received votes: {{ this.$store.state.nrOfParticipantsVoted }}</p>
 </template> 
 
 <script>
 export default {
-    name: "JoinDetails",
-    props: {
-        nrOfPeople: Number,
-    }
 }
 </script>
 

@@ -11,13 +11,13 @@
     </button>
     <div v-if="sessionStarted">
       <h2>Session: {{ sessionId }}</h2>
-      <JoinDetails :nrOfPeople="nrOfPeopleJoined" />
+      <JoinDetails />
       <p>
         Once everyone has submitted their vote, click the button to show the
         results.
       </p>
       <button @click="toggleResults">
-        {{ showResults ? "Hide votes" : "Show votes" }}
+        {{ this.$store.state.showResults ? "Hide votes" : "Show votes" }}
       </button>
       <h3>Cards</h3>
       <p>Click on a card to vote. To undo your vote, click the card again.</p>
@@ -59,14 +59,11 @@ export default {
       sessionStarted: this.sessionId !== null && this.sessionId !== undefined,
       isAnyCardSelected: false,
       selectedCard: null,
-      showResults: false,
-      nrOfPeopleJoined: 0,
-      nrOfPeopleVoted: 0,
     };
   },
   methods: {
     toggleResults() {
-      this.showResults = !this.showResults;
+      this.$store.commit("toggleShowResults");
     },
     startSession() {
       this.sessionId = generateName();
@@ -74,11 +71,7 @@ export default {
       this.selectedCard = null;
       this.isAnyCardSelected = false;
       this.nrOfPeopleVoted = 0;
-      this.$store.state.cards.forEach(card => {
-        card.count = 0;
-        card.isSelected = false;
-      });
-      this.showResults = false;
+      this.$store.commit('reset');
       this.$router.push({ path: "/", query: { sessionId: this.sessionId } });
     },
     vote(number) {
