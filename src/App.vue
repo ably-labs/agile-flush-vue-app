@@ -11,6 +11,7 @@
     </button>
     <div v-if="sessionStarted">
       <h2>Session: {{ sessionId }}</h2>
+      <JoinDetails :nrOfPeople="nrOfPeopleJoined" />
       <p>
         Once everyone has submitted their vote, click the button to show the
         results.
@@ -41,20 +42,26 @@
 
 <script>
 import { generateName } from "./util/nameGenerator.js";
+import * as Ably from 'ably';
 import CardDetails from "./components/CardDetails.vue";
+import JoinDetails from "./components/JoinDetails.vue";
 
 export default {
   name: "App",
   components: {
     CardDetails,
+    JoinDetails,
   },
   data() {
     return {
+      realtime: null,
       sessionId: this.$route.query.sessionId,
       sessionStarted: this.sessionId !== null && this.sessionId !== undefined,
       isAnyCardSelected: false,
       selectedCard: null,
       showResults: false,
+      nrOfPeopleJoined: 0,
+      nrOfPeopleVoted: 0,
       cards: [
         {
           number: "0",
@@ -196,6 +203,7 @@ export default {
       this.sessionStarted = true;
       this.selectedCard = null;
       this.isAnyCardSelected = false;
+      this.nrOfPeopleVoted = 0;
       this.cards.forEach(card => {
         card.count = 0;
         card.isSelected = false;
@@ -218,6 +226,14 @@ export default {
       }
     },
   },
+  created() {
+    this.realtime = new Ably.Realtime({
+      authUrl: '/auth'
+    });
+  },
+  destroyed() {
+    this.realtime.connection.close();
+  }
 };
 </script>
 
