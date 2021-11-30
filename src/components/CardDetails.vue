@@ -1,6 +1,6 @@
 <template>
   <div :id="card.number" @click="selectCard(card.number)">
-    <p :class="{ selected: selectedCard === card.number }">{{ card.visual }}</p>
+    <p :class="{ selected: card.isSelected }">{{ card.visual }}</p>
     <p class="votecount" v-if="showResults">{{ card.count }}</p>
   </div>
 </template>
@@ -10,26 +10,20 @@ export default {
   name: "CardDetails",
   props: {
     card: Object,
-    isCardSelected: Boolean,
+    isAnyCardSelected: Boolean,
     showResults: Boolean,
   },
   data() {
     return { 
-      selectedCard: null 
     }
   },
   methods: {
     selectCard(number) {
-      if (this.isCardSelected === false) {
-        this.selectedCard = number;
+      if (this.isAnyCardSelected === false) {
         this.$emit("selectCard", number);
-      } else if (this.isCardSelected && this.selectedCard === number) {
-        this.selectedCard = null;
+      } else if (this.isAnyCardSelected && this.card.isSelected) {
         this.$emit("deselectCard", number);
       }
-    },
-    reset() {
-      this.$data.selectedCard = null;
     }
   }
 };

@@ -26,7 +26,7 @@
           v-for="card in cards"
           :key="card.number"
           :card="card"
-          :isCardSelected="isCardSelected"
+          :isAnyCardSelected="isAnyCardSelected"
           :showResults="showResults"
           @selectCard="vote"
           @deselectCard="vote"
@@ -52,13 +52,14 @@ export default {
     return {
       sessionId: this.$route.query.sessionId,
       sessionStarted: this.sessionId !== null && this.sessionId !== undefined,
-      isCardSelected: false,
+      isAnyCardSelected: false,
       selectedCard: null,
       showResults: false,
       cards: [
         {
           number: "0",
           count: 0,
+          isSelected: false,
           visual: ` .----------------. 
 | .--------------. |
 | |     ____     | |
@@ -74,6 +75,7 @@ export default {
         {
           number: "1",
           count: 0,
+          isSelected: false,
           visual: ` .----------------.
 | .--------------. |
 | |     __       | |
@@ -89,6 +91,7 @@ export default {
         {
           number: "2",
           count: 0,
+          isSelected: false,
           visual: ` .----------------. 
 | .--------------. |
 | |    _____     | |
@@ -104,6 +107,7 @@ export default {
         {
           number: "3",
           count: 0,
+          isSelected: false,
           visual: ` .----------------. 
 | .--------------. |
 | |    ______    | |
@@ -119,6 +123,7 @@ export default {
         {
           number: "5",
           count: 0,
+          isSelected: false,
           visual: ` .----------------. 
 | .--------------. |
 | |   _______    | |
@@ -134,6 +139,7 @@ export default {
         {
           number: "8",
           count: 0,
+          isSelected: false,
           visual: ` .----------------. 
 | .--------------. |
 | |     ____     | |
@@ -149,6 +155,7 @@ export default {
         {
           number: "13",
           count: 0,
+          isSelected: false,
           visual: ` .--------------------------.
 | .------------------------. |
 | |     __      ______     | |
@@ -164,6 +171,7 @@ export default {
         {
           number: "21",
           count: 0,
+          isSelected: false,
           visual: ` .--------------------------.
 | .------------------------. |
 | |     _____      __      | |
@@ -187,26 +195,26 @@ export default {
       this.sessionId = generateName();
       this.sessionStarted = true;
       this.selectedCard = null;
+      this.isAnyCardSelected = false;
       this.cards.forEach(card => {
         card.count = 0;
+        card.isSelected = false;
       });
       this.showResults = false;
-      this.$children.forEach(child => {
-        child.reset();
-      });
       this.$router.push({ path: "/", query: { sessionId: this.sessionId } });
     },
     vote(number) {
-      if (this.isCardSelected === false) {
-        this.isCardSelected = true;
+      let index = this.cards.findIndex(card => card.number === number)
+      if (this.isAnyCardSelected === false) {
+        this.isAnyCardSelected = true;
         this.selectedCard = number;
-        let index = this.cards.findIndex(card => card.number === number)
         this.cards[index].count++;
+        this.cards[index].isSelected=true;
       } else {
-        this.isCardSelected = false;
+        this.isAnyCardSelected = false;
         this.selectedCard = null;
-        let index = this.cards.findIndex(card => card.number === number)
         this.cards[index].count--;
+        this.cards[index].isSelected=false;
       }
     },
   },
