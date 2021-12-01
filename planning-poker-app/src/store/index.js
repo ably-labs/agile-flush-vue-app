@@ -1,10 +1,13 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import * as Ably from 'ably';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    realtime: null,
+    clientId: null,
     nrOfParticipantsJoined: 0,
     nrOfParticipantsVoted: 0,
     showResults: false,
@@ -139,7 +142,24 @@ export default new Vuex.Store({
       },
     ],
   },
+  getters: {
+    cardsSortedByCountDescending: state => {
+      return state.cards
+        .filter(card => card.count > 0)
+        .sort(function(a, b) { b.count - a.count });
+    }
+  },
   mutations: {
+    setRealTime(state) {
+      state.realtime = new Ably.Realtime({
+        authUrl: '/auth'
+      });
+    },
+    setClientId(state) {
+      state.clientId = new Ably.Realtime({
+        authUrl: '/auth'
+      });
+    },
     toggleShowResults(state) {
       state.showResults = !state.showResults;
     },

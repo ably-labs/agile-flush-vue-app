@@ -35,62 +35,60 @@ realtime.connection.once('connected', () => {
 
   subscribeToHostEvents();
 
-  sessionChannel.presence.subscribe('enter', handleNewPlayerEntered);
-  sessionChannel.presence.subscribe('leave', handleExistingPlayerLeft);
+  sessionChannel.presence.subscribe('enter', handleNewParticipantEntered);
+  sessionChannel.presence.subscribe('leave', handleExistingParticipantLeft);
   sessionChannel.publish('thread-ready', { start: true });
 });
 
-function handleNewPlayerEntered(player) {
-  console.log(player.clientId + 'player entered quiz room');
-  const newPlayerId = player.clientId;
+function handleNewParticipantEntered(participant) {
+  console.log(participant.clientId + 'player entered quiz room');
+  const newParticipantId = participant.clientId;
   totalParticipants++;
   parentPort.postMessage({
-    roomCode: sessionId,
+    sessionId: sessionId,
     totalPlayers: totalParticipants,
-    didQuizStart: didSessionStart
+    didSessionStart: didSessionStart
   });
 
-  let newPlayerState = {
-    id: newPlayerId,
-    nickname: player.data.nickname,
-    avatarColor: player.data.avatarColor,
-    isHost: player.data.isHost,
-    score: 0
+  let newParticipantState = {
+    id: newParticipantId,
+    isHost: participant.data.isHost,
+    vote: 0
   };
 
-  if (player.data.isHost) {
-    let quizType = player.data.quizType;
+  if (participant.data.isHost) {
+    let quizType = participant.data.quizType;
     quizType === 'CustomQuiz'
       ? (questions = customQuestions)
       : (questions = randomQuestions);
   } else {
-    participantChannels[newPlayerId] = realtime.channels.get(
-      `${sessionId}:player-ch-${player.clientId}`
+    participantChannels[newParticipantId] = realtime.channels.get(
+      `${sessionId}:participant-ch-${participant.clientId}`
     );
 
-    subscribeToPlayerChannel(participantChannels[newPlayerId], newPlayerId);
+    subscribeToPlayerChannel(participantChannels[newParticipantId], newParticipantId);
   }
 
-  globalParticipantState[newPlayerId] = newPlayerState;
+  globalParticipantState[newParticipantId] = newParticipantState;
   sessionChannel.publish('new-player', {
-    newPlayerState
+    newPlayerState: newParticipantState
   });
 }
 
-function handleExistingPlayerLeft(player) {
-  console.log('leaving player', player.clientId);
-  const leavingPlayerId = player.clientId;
+function handleExistingParticipantLeft(participant) {
+  console.log('leaving participant', participant.clientId);
+  const leavingParticipantId = participant.clientId;
   totalParticipants--;
   parentPort.postMessage({
-    roomCode: sessionId,
-    totalPlayers: totalParticipants
+    sessionId: sessionId,
+    totalParticipants: totalParticipants
   });
-  delete globalParticipantState[leavingPlayerId];
-  if (leavingPlayerId === hostClientId) {
+  delete globalParticipantState[leavingParticipantId];
+  if (leavingParticipantId === hostClientId) {
     sessionChannel.publish('host-left', {
       endQuiz: true
     });
-    forceQuizEnd();
+    forceSessionEnd();
   }
 }
 
@@ -106,13 +104,13 @@ async function publishTimer(event, countDownSec) {
 }
 
 function subscribeToHostEvents() {
-  adminChannel.subscribe('start-quiz', async () => {
+  adminChannel.subscribe('start-session', async () => {
     didSessionStart = true;
     parentPort.postMessage({
       roomCode: sessionId,
       didQuizStart: didSessionStart
     });
-    await publishTimer('start-quiz-timer', START_TIMER_SEC);
+    await publishTimer('start-session-timer', START_TIMER_SEC);
     publishQuestion(0, false);
   });
 
@@ -147,14 +145,14 @@ function subscribeToHostEvents() {
     }
   });
 
-  adminChannel.subscribe('end-quiz-now', () => {
-    forceQuizEnd();
+  adminChannel.subscribe('end-session-now', () => {
+    forceSessionEnd();
   });
 }
 
-function forceQuizEnd() {
-  sessionChannel.publish('quiz-ending', {
-    quizEnding: true
+function forceSessionEnd() {
+  sessionChannel.publish('session-ending', {
+    sessionEnding: true
   });
   killWorkerThread();
 }
@@ -200,13 +198,13 @@ function computeTopScorers() {
   });
 }
 
-function subscribeToPlayerChannel(playerChannel, playerId) {
-  playerChannel.subscribe('player-answer', (msg) => {
+function subscribeToPlayerChannel(participantChannel, participantId) {
+  participantChannel.subscribe('participant-answer', (msg) => {
     numParticipantsVoted++;
     if (
       questions[msg.data.questionIndex].correct === msg.data.playerAnswerIndex
     ) {
-      globalParticipantState[playerId].score += 5;
+      globalParticipantState[participantId].score += 5;
     }
     updateLiveStatsForHost(numParticipantsVoted, totalParticipants - 1);
   });
@@ -234,8 +232,8 @@ function killWorkerThread() {
   sessionChannel.detach();
   parentPort.postMessage({
     killWorker: true,
-    roomCode: sessionId,
-    totalPlayers: totalParticipants
+    sessionId: sessionId,
+    totalParticipants: totalParticipants
   });
   process.exit(0);
 }

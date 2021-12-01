@@ -8,7 +8,7 @@ const path = require('path');
 
 const app = express();
 const ABLY_API_KEY = process.env.ABLY_API_KEY;
-const globalQuizChName = 'main-quiz-thread';
+const mainChannelName = 'main-planning-poker';
 
 let globalChannel;
 const activeSessions = {};
@@ -44,7 +44,7 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'planning-poker-app/dist/index.html'));
 });
 
-app.get('/play', function (req, res) {
+app.get('/join', function (req, res) {
   let requestedSessionId = req.query.sessionId;
   if (activeSessions[requestedSessionId].didSessionStart === true) {
     res.sendFile(path.join(__dirname, 'planning-poker-app/dist/index.html'));
@@ -68,12 +68,12 @@ const listener = app.listen(process.env.PORT || 8082, () => {
 });
 
 realtime.connection.once('connected', () => {
-  globalChannel = realtime.channels.get(globalQuizChName);
-  globalChannel.presence.subscribe('enter', (person) => {
-    console.log('new quiz host', person.clientId);
+  globalChannel = realtime.channels.get(mainChannelName);
+  globalChannel.presence.subscribe('enter', (participant) => {
+    console.log('new quiz host', participant.clientId);
     generateNewSession(
-      person.data.roomCode,
-      person.clientId
+      participant.data.sessionId,
+      participant.clientId
     );
   });
 });
@@ -91,18 +91,18 @@ function generateNewSession(hostSessionId, hostClientId) {
       console.log(`WORKER EXITED DUE TO AN ERROR ${error}`);
     });
     worker.on('message', (msg) => {
-      if (msg.roomCode && !msg.killWorker) {
-        activeSessions[msg.roomCode] = {
-          roomCode: msg.roomCode,
-          totalPlayers: msg.totalPlayers,
-          didQuizStart: msg.didQuizStart
+      if (msg.sessionId && !msg.killWorker) {
+        activeSessions[msg.sessionId] = {
+          sessionId: msg.sessionId,
+          totalParticipants: msg.totalParticipants,
+          didSessionStart: msg.didSessionStart
         };
         totalPeopleThroughout += totalPeopleThroughout;
-      } else if (msg.roomCode && msg.killWorker) {
-        totalPeopleThroughout -= msg.totalPlayers;
-        delete activeSessions[msg.roomCode];
+      } else if (msg.sessionId && msg.killWorker) {
+        totalPeopleThroughout -= msg.totalParticipants;
+        delete activeSessions[msg.sessionId];
       } else {
-        activeSessions[msg.roomCode].didQuizStart = msg.didQuizStart;
+        activeSessions[msg.sessionId].didSessionStart = msg.didSessionStart;
         console.log('Main knows started');
       }
     });

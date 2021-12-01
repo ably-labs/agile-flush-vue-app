@@ -42,7 +42,7 @@
 
 <script>
 import { generateName } from "./util/nameGenerator.js";
-import * as Ably from 'ably';
+
 import CardDetails from "./components/CardDetails.vue";
 import JoinDetails from "./components/JoinDetails.vue";
 
@@ -85,14 +85,150 @@ export default {
         this.$store.commit('deselectCard', number);
       }
     },
+    createQuizRoom() {
+      this.createBtnClicked = true;
+      this.waitForGameRoom();
+      this.enterMainThread();
+    },
+    waitForGameRoom() {
+      this.myQuizRoomCh = this.realtime.channels.get(
+        `${this.myQuizRoomCode}:primary`
+      );
+      this.hostAdminCh = this.realtime.channels.get(
+        `${this.myQuizRoomCode}:host`
+      );
+      this.myQuizRoomCh.subscribe('thread-ready', () => {
+        this.handleQuizRoomReady();
+      });
+    },
+    handleQuizRoomReady() {
+      this.isRoomReady = true;
+      this.globalQuizCh.detach();
+      this.enterGameRoomAndSubscribeToEvents();
+      this.playerLink = `${this.playerLinkBase}?quizCode=${this.myQuizRoomCode}`;
+      if (this.quizType == 'CustomQuiz') {
+        let questions = this.customQuizQuestions;
+        this.hostAdminCh.publish('quiz-questions', {
+          questions
+        });
+      }
+    },
+    enterGameRoomAndSubscribeToEvents() {
+      this.myQuizRoomCh.presence.enter({
+        nickname: this.hostNickname,
+        avatarColor: this.myAvatarColor,
+        isHost: true,
+        quizType: this.quizType
+      });
+      this.subscribeToRoomChEvents();
+    },
+    enterMainThread() {
+      this.globalQuizCh = this.realtime.channels.get(this.globalQuizChName);
+      this.globalQuizCh.presence.enter({
+        nickname: this.hostNickname,
+        roomCode: this.myQuizRoomCode
+      });
+    },
+    getRandomRoomId() {
+      return (
+        'room-' +
+        Math.random()
+          .toString(36)
+          .substr(2, 8)
+      );
+    },
+    subscribeToRoomChEvents() {
+      this.myQuizRoomCh.subscribe('new-player', msg => {
+        this.handleNewPlayerEntered(msg);
+      });
+      this.myQuizRoomCh.subscribe('start-quiz-timer', msg => {
+        this.didHostStartGame = true;
+        this.timer = msg.data.countDownSec;
+      });
+      this.myQuizRoomCh.subscribe('new-question', msg => {
+        this.handleNewQuestionReceived(msg);
+      });
+      this.myQuizRoomCh.subscribe('question-timer', msg => {
+        this.questionTimer = msg.data.countDownSec;
+        if (this.questionTimer < 0) {
+          this.questionTimer = 30;
+        }
+      });
+      this.myQuizRoomCh.subscribe('correct-answer', msg => {
+        this.handleCorrectAnswerReceived(msg);
+      });
+      this.myQuizRoomCh.subscribe('live-stats-update', msg => {
+        this.numAnswered = msg.data.numAnswered;
+        this.numPlaying = msg.data.numPlaying;
+      });
+      this.myQuizRoomCh.subscribe('full-leaderboard', msg => {
+        this.leaderboard = msg.data.leaderboard;
+      });
+    },
+    handleNewPlayerEntered(msg) {
+      let { clientId, nickname, avatarColor, isHost } = msg.data.newPlayerState;
+      if (!isHost) {
+        this.onlinePlayersArr.push({
+          clientId,
+          nickname,
+          avatarColor,
+          isHost
+        });
+      } else {
+        return;
+      }
+    },
+    handleNewQuestionReceived(msg) {
+      this.showAnswer = false;
+      this.showQuestions = true;
+      this.newQuestionNumber = msg.data.questionNumber;
+      this.newQuestion = msg.data.question;
+      this.newChoices = msg.data.choices;
+      this.isLastQuestion = msg.data.isLastQuestion;
+      this.numAnswered = msg.data.numAnswered;
+      this.numPlaying = msg.data.numPlaying;
+      this.showImg = msg.data.showImg;
+      this.questionImgLink = msg.data.imgLink;
+    },
+    handleCorrectAnswerReceived(msg) {
+      this.showAnswer = true;
+      if (this.newQuestionNumber == msg.data.questionNumber) {
+        this.correctAnswerIndex = msg.data.correctAnswerIndex;
+      }
+      if (this.isLastQuestion) {
+        this.showFinalScreen = true;
+      }
+    },
+    copyPlayerInviteLink() {
+      this.copyClicked = true;
+      this.copyBtnText = 'Copied!';
+      setTimeout(() => {
+        this.copyClicked = false;
+        this.copyBtnText = 'Copy shareable link';
+      }, 2000);
+      navigator.clipboard.writeText(this.playerLink);
+    },
+    startQuiz() {
+      this.hostAdminCh.publish('start-quiz', {
+        start: true
+      });
+    },
+    endQuizNow() {
+      this.showFinalScreen = true;
+    }
+  },
+  beforeDestroy() {
+    if (this.myQuizRoomCh) {
+      this.myQuizRoomCh.presence.leave();
+    }
+    this.questionTimer = 30;
   },
   created() {
-    this.realtime = new Ably.Realtime({
-      authUrl: '/auth'
-    });
+
+    this.$store.commit('setRealTime');
   },
   destroyed() {
-    this.realtime.connection.close();
+    this.$store.state.realtime.connection.close();
   }
 };
 </script>
