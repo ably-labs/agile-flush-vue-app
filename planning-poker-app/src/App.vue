@@ -17,14 +17,14 @@
         results.
       </p>
       <button @click="toggleResults">
-        {{ this.$store.state.showResults ? "Hide votes" : "Show votes" }}
+        {{ showResults ? "Hide votes" : "Show votes" }}
       </button>
       <h3>Cards</h3>
       <p>Click on a card to vote. To undo your vote, click the card again.</p>
       <div class="cardlist">
         <CardDetails
           class="card"
-          v-for="card in this.$store.state.cards"
+          v-for="card in cards"
           :key="card.number"
           :card="card"
           :isAnyCardSelected="isAnyCardSelected"
@@ -42,7 +42,6 @@
 
 <script>
 import { generateName } from "./util/nameGenerator.js";
-
 import CardDetails from "./components/CardDetails.vue";
 import JoinDetails from "./components/JoinDetails.vue";
 
@@ -54,12 +53,20 @@ export default {
   },
   data() {
     return {
-      realtime: null,
+      realtime: null, 
       sessionId: this.$route.query.sessionId,
       sessionStarted: this.sessionId !== null && this.sessionId !== undefined,
       isAnyCardSelected: false,
       selectedCard: null,
     };
+  },
+  computed: {
+    cards() {
+      return this.$store.state.cards;
+    },
+    showResults() {
+      return this.$store.state.showResults;
+    }
   },
   methods: {
     toggleResults() {

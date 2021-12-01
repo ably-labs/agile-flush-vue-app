@@ -1,7 +1,7 @@
 <template>
   <div :id="card.number" @click="selectCard(card.number)">
     <p :class="{ selected: card.isSelected }">{{ card.visual }}</p>
-    <p class="votecount" v-if="this.$store.state.showResults">{{ card.count }}</p>
+    <p class="votecount" v-if="showResults">{{ card.count }}</p>
   </div>
 </template>
 
@@ -14,6 +14,11 @@ export default {
   },
   data() {
     return { 
+    }
+  },
+  computed: {
+    showResults() {
+      return this.$store.state.showResults;
     }
   },
   methods: {
