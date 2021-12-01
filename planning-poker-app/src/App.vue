@@ -4,7 +4,7 @@
     <ol>
       <li>Start a new session.</li>
       <li>Invite your team members by copying &amp; sharing the url.</li>
-      <li>Start voting 🚀!</li>
+      <li>Start voting for the user stories! 🚀</li>
     </ol>
     <button @click="startSession">
       {{ sessionStarted ? "Start new session" : "Start session" }}
@@ -13,12 +13,13 @@
       <h2>Session: {{ sessionId }}</h2>
       <JoinDetails />
       <p>
-        Once everyone has submitted their vote, click the button to show the
-        results.
+        Once everyone has submitted their vote, click the <i>Show votes</i> button to show the
+        results. Click <i>Reset votes</i> to start planning a new story.
       </p>
       <button @click="toggleResults">
         {{ showResults ? "Hide votes" : "Show votes" }}
       </button>
+      <button @click="resetVoting">Reset votes</button>
       <h3>Cards</h3>
       <p>Click on a card to vote. To undo your vote, click the card again.</p>
       <div class="cardlist">
@@ -75,11 +76,14 @@ export default {
     startSession() {
       this.sessionId = generateName();
       this.sessionStarted = true;
+      this.resetVoting();
+      this.$router.push({ path: "/", query: { sessionId: this.sessionId } });
+    },
+    resetVoting() {
       this.selectedCard = null;
       this.isAnyCardSelected = false;
       this.nrOfPeopleVoted = 0;
       this.$store.commit('reset');
-      this.$router.push({ path: "/", query: { sessionId: this.sessionId } });
     },
     vote(number) {
       if (this.isAnyCardSelected === false) {
