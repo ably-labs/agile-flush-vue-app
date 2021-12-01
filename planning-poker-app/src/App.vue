@@ -42,9 +42,10 @@
 </template>
 
 <script>
-import { generateName } from "./util/nameGenerator.js";
+
 import CardDetails from "./components/CardDetails.vue";
 import JoinDetails from "./components/JoinDetails.vue";
+import { generateName } from "./util/nameGenerator.js";
 
 export default {
   name: "App",
@@ -54,7 +55,7 @@ export default {
   },
   data() {
     return {
-      realtime: null, 
+      realtime: null,
       sessionId: this.$route.query.sessionId,
       sessionStarted: this.sessionId !== null && this.sessionId !== undefined,
       isAnyCardSelected: false,
@@ -67,23 +68,23 @@ export default {
     },
     showResults() {
       return this.$store.state.showResults;
-    }
+    },
+    routeSessionId() {
+      return this.$route.query.sessionId;
+    },
   },
   methods: {
     toggleResults() {
       this.$store.commit("toggleShowResults");
     },
     startSession() {
-      this.sessionId = generateName();
-      this.sessionStarted = true;
-      this.resetVoting();
+      let sessionId = this.routeSessionId() ?? generateName();
+      console.log("sessionId:", sessionId);
+      this.$store.dispatch("startSession", sessionId);
       this.$router.push({ path: "/", query: { sessionId: this.sessionId } });
     },
     resetVoting() {
-      this.selectedCard = null;
-      this.isAnyCardSelected = false;
-      this.nrOfPeopleVoted = 0;
-      this.$store.commit('reset');
+      this.$store.dispatch('startSession');
     },
     vote(number) {
       if (this.isAnyCardSelected === false) {
@@ -235,11 +236,10 @@ export default {
     this.questionTimer = 30;
   },
   created() {
-
-    this.$store.commit('setRealTime');
+    this.$store.dispatch('instantiateAbly', this.routeSessionId)
   },
   destroyed() {
-    this.$store.state.realtime.connection.close();
+    this.$store.dispatch('closeAblyConnection')
   }
 };
 </script>
