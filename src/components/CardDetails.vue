@@ -1,32 +1,33 @@
 <template>
   <div :id="card.number" @click="selectCard(card.number)">
     <p :class="{ selected: card.isSelected }">{{ card.visual }}</p>
-    <p class="votecount" v-if="showResults">{{ card.count }}</p>
+    <p class="votecount" v-if="getShowResults">{{ card.count }}</p>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   name: "CardDetails",
   props: {
-    card: Object,
-    isAnyCardSelected: Boolean
-  },
-  data() {
-    return { 
-    }
+    card: Object
   },
   computed: {
-    showResults() {
-      return this.$store.state.showResults;
-    }
+    ...mapGetters([
+      "getShowResults",
+      "getIsAnyCardSelected"])
   },
   methods: {
+    ...mapActions([
+      "doVote",
+      "undoVote"
+    ]),
     selectCard(number) {
-      if (this.isAnyCardSelected === false) {
-        this.$emit("selectCard", number);
-      } else if (this.isAnyCardSelected && this.card.isSelected) {
-        this.$emit("deselectCard", number);
+      if (this.getIsAnyCardSelected === false) {
+        this.doVote(number);
+      } else if (this.getIsAnyCardSelected && this.card.isSelected) {
+        this.undoVote(number);
       }
     }
   }

@@ -10,9 +10,8 @@ export default new Vuex.Store({
     isAblyConnected: false,
     ablyClientId: null,
     sessionId: null,
-    nrOfParticipantsJoined: 0,
-    nrOfParticipantsVoted: 0,
-    participantsArr: [],
+    participantsJoinedArr: [],
+    participantsVotedArr: [],
     channelNames: {
       voting: "voting"
     },
@@ -23,6 +22,7 @@ export default new Vuex.Store({
       voting: null
     },
     showResults: false,
+    isAnyCardSelected: false,
     cards: [
       {
         number: "0",
@@ -157,17 +157,19 @@ export default new Vuex.Store({
   getters: {
     getIsAblyConnectedStatus: state => state.isAblyConnected,
     getSessionId: state => state.sessionId,
+    getSessionStarted: state => state.sessionId !== null && state.sessionId !== undefined,
     getVotingChannel: state => state.channelInstances.voting,
     getVotingMessage: state => state.channelMessages.voting,
-    getNrOfParticipantsJoined: state => state.nrOfParticipantsJoined,
-    getNrOfParticipantsVoted: state => state.nrOfParticipantsVoted,
+    getNrOfParticipantsJoined: state => state.participantsJoinedArr.length,
+    getNrOfParticipantsVoted: state => state.participantsVotedArr.length,
     getShowResults: state => state.showResults,
     getCards: state => state.cards,
     getCardsSortedByCountDescending: state => {
       return state.cards
         .filter(card => card.count > 0)
         .sort(function(a, b) { b.count - a.count });
-    }
+    },
+    getIsAnyCardSelected: state => state.isAnyCardSelected
   },
   mutations: {
     setAblyRealtimeInstance(state, ablyRealtimeInstance) {
@@ -185,47 +187,68 @@ export default new Vuex.Store({
     setAblyChannelInstances(state, { voting }) {
       state.channelInstances.voting = voting;
     },
-    setParticipantsJoined(state, count) {
-      state.nrOfParticipantsJoined = count;
+    setParticipantsJoined(state, participantsJoined) {
+      state.participantsJoinedArr = participantsJoined;
     },
-    incrementParticipantsJoined(state) {
-      state.nrOfParticipantsJoined++;
+    addParticipantJoined(state, clientId) {
+      state.participantsJoinedArr.push(clientId);
     },
-    decrementParticipantsJoined(state) {
-      state.nrOfParticipantsJoined--;
-    },
-    addParticipant(state, participant) {
-      state.participantsArr.push(participant);
-    },
-    removeParticipant(state, clientId) {
-      state.participantsArr.splice(
-        state.participantsArr.findIndex(
+    removeParticipantJoined(state, clientId) {
+      state.participantsJoinedArr.splice(
+        state.participantsJoinedArr.findIndex(
           participant => participant.id === clientId
         ),
         1
       );
     },
+    addParticipantsVoted(state, clientId) {
+      state.participantsVotedArr.push(clientId);
+    },
+    removeParticipantsVoted(state, clientId) {
+      state.participantsVotedArr.splice(
+        state.participantsVotedArr.findIndex(
+          id => id === clientId
+        ),
+        1
+      );
+    },
+    setParticipantsVoted(state, participantsVoted) {
+      state.participantsVotedArr = participantsVoted;
+    },
     toggleShowResults(state) {
       state.showResults = !state.showResults;
     },
-    setCards(state, cards) {
-      state.cards = cards;
+    resetCards(state) {
+      state.cards.forEach((card) => {
+        card.count = 0;
+        card.isSelected = false;
+      });
+      state.isAnyCardSelected = false;
+    },
+    setNrOfParticipantVoted(state, nrOfParticipantsVoted) {
+      state.nrOfParticipantsVoted = nrOfParticipantsVoted;
+    },
+    setShowResults(state, showResults) {
+      state.showResults = showResults;
     },
     selectCard(state, cardNumber) {
       let index = state.cards.findIndex((card) => card.number === cardNumber);
       state.cards[index].isSelected = true;
       state.cards[index].count++;
-      state.nrOfParticipantsVoted++;
+      state.isAnyCardSelected = true;
     },
     deselectCard(state, cardNumber) {
       let index = state.cards.findIndex((card) => card.number === cardNumber);
       state.cards[index].isSelected = false;
       state.cards[index].count--;
-      state.nrOfParticipantsVoted++;
+      state.isAnyCardSelected = false;
     }
   },
+
   actions: {
-    instantiateAbly(vueContext, sessionId = null) {
+
+    instantiateAblyConnection(vueContext, sessionId = null) {
+      console.log('instantiateAblyConnection-sessionId:', sessionId);
       const ablyInstance = new Ably.Realtime({
         authUrl: '/auth',
         echoMessages: false
@@ -246,16 +269,16 @@ export default new Vuex.Store({
         vueContext.dispatch("enterClientInAblyPresenceSet");
       });
     },
+
     startSession(vueContext, sessionId) {
-      let cards = this.state.getters.getCards;
-      cards.forEach((card) => {
-        card.count = 0;
-        card.isSelected = false;
-      });
-      vueContext.commit("setCards", cards);
       vueContext.commit("setSessionId", sessionId);
-      vueContext.commit("showResults", false);
-      vueContext.commit("nrOfParticipantsVoted", 0);
+      vueContext.dispatch("resetVoting");
+    },
+
+    resetVoting(vueContext) {
+      vueContext.commit("resetCards");
+      vueContext.commit("setShowResults", false);
+      vueContext.commit("setParticipantsVoted", []);
     },
 
     closeAblyConnection() {
@@ -264,9 +287,7 @@ export default new Vuex.Store({
 
     attachToAblyChannels(vueContext) {
       const votingChannel = this.state.ablyRealtimeInstance.channels.get(
-        this.state.channelNames.voting +
-          "-" +
-          this.state.sessionId
+        `${this.state.channelNames.voting}-{this.state.sessionId}`
       );
 
       vueContext.commit("setAblyChannelInstances", {
@@ -276,40 +297,19 @@ export default new Vuex.Store({
       vueContext.dispatch("subscribeToChannels");
     },
 
-    subscribeToChannels({ state, dispatch }) {
-      state.channelInstances.comments.subscribe(msg => {
-        state.channelMessages.commentsChMsg = msg;
+    subscribeToChannels({ state }) {
+      state.channelInstances.voting.subscribe(msg => {
+        state.channelMessages.voteMessage = msg;
       });
-      state.channelInstances.mainParty.subscribe(msg => {
-        state.channelMessages.mainPartyChMsg = msg;
-      });
-      state.channelInstances.video.subscribe(msg => {
-        if (msg.name === "general-status-request" && state.isAdmin) {
-          dispatch("publishCurrentVideoStatus", "general-status");
-        } else if (!state.isAdmin && msg.name !== "general-status-request") {
-          state.channelMessages.videoChMsg = msg;
-        }
-      });
-    },
-
-    publishCurrentVideoStatus({ state }, updateEvent) {
-      console.log("ADMIN PUBLISHING", updateEvent);
-      state.channelInstances.video.publish(
-        updateEvent,
-        this.state.currentVideoStatus
-      );
     },
 
     getExistingAblyPresenceSet(vueContext) {
       this.state.channelInstances.voting.presence.get((err, participants) => {
         if (!err) {
-          for (let i = 0; i < participants.length; i++) {
-            vueContext.commit("addParticipant", {
-              clientId: participants[i].clientId
-            });
-          }
           console.log(participants);
-          vueContext.commit("setParticipantsJoined", participants.length);
+          for (let i = 0; i < participants.length; i++) {
+            vueContext.commit("addParticipantJoined", participants[i].clientId);
+          }
         } else {
           console.log(err);
         }
@@ -332,15 +332,13 @@ export default new Vuex.Store({
     },
 
     handleNewParticipantEntered(vueContext, participant) {
-      vueContext.commit("incrementParticipantsJoined");
-      vueContext.commit("addParticipant", {
-        id: participant.clientId
-      });
+      console.log("handleNewParticipantEntered", participant.id);
+      vueContext.commit("addParticipantJoined", participant.id);
     },
 
     handleExistingParticipantLeft(vueContext, participant) {
+      console.log("handleExistingParticipantLeft", participant.id);
       vueContext.commit("removeParticipant", participant.id);
-      vueContext.commit("decrementParticipantsJoined");
     },
 
     enterClientInAblyPresenceSet() {
@@ -349,17 +347,31 @@ export default new Vuex.Store({
       });
     },
 
-    requestInitialVideoStatus({ state }) {
-      state.channelInstances.video.publish(
-        "general-status-request",
-        "request"
-      );
+    toggleShowResults(vueContext) {
+      vueContext.commit("toggleShowResults");
     },
 
-    publishVoteToAbly({ state }, voteMessage) {
+    doVote(vueContext, cardNumber) {
+      vueContext.commit("selectCard", cardNumber);
+      vueContext.commit("addParticipantsVoted", this.state.ablyClientId);
+      vueContext.dispatch("publishVoteToAbly", cardNumber);
+    },
+    undoVote(vueContext, cardNumber) {
+      vueContext.commit("deselectCard", cardNumber);
+      vueContext.commit("removeParticipantsVoted", this.state.ablyClientId);
+      vueContext.dispatch("publishUndoVoteToAbly", cardNumber);
+    },
+
+    publishVoteToAbly({ state }, cardNumber) {
       state.channelInstances.voting.publish("vote", {
         id: state.ablyClientId,
-        content: voteMessage
+        cardNumber: cardNumber
+      });
+    },
+    publishUndoVoteToAbly({ state }, cardNumber) {
+      state.channelInstances.voting.publish("undo-vote", {
+        id: state.ablyClientId,
+        cardNumber: cardNumber
       });
     }
   }
