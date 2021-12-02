@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>♥♣🚽 Agile Flush 🚽♠♦</h1>
+    <h1><span class="red">♥</span>♣🚽 Agile Flush 🚽♠<span class="red">♦</span></h1>
     <p>
       The best place for online planning poker!
     </p>
@@ -79,9 +79,9 @@ export default {
       "resetVoting"
     ]),
     start() {
-      let sessionId = this.routeSessionId ?? generateName();
-      this.$router.push({ path: "/", query: { sessionId: sessionId } });
+      let sessionId = generateName();
       this.startSession(sessionId);
+      this.$router.replace({ path: `/`, query: { sessionId: sessionId } });
     },
     reset() {
       this.resetVoting();
@@ -96,7 +96,7 @@ export default {
 };
 </script>
 
-<style scope>
+<style>
 body {
   font-family: "Courier New", monospace;
 }
@@ -113,5 +113,11 @@ body {
 
 button {
   font-family: "Courier New", monospace;
+  padding: 1em;
+  margin-right: 1em;
 }
+
+  a, .red {
+    color: #e40000;
+  }
 </style>
