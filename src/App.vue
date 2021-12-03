@@ -87,6 +87,7 @@ export default {
       this.resetVoting();
     },
     created() {
+      console.log("routeSessionId:", this.routeSessionId);
       this.instantiateAblyConnection(this.routeSessionId);
     },
     destroyed() {

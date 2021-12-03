@@ -1,5 +1,11 @@
 {
-    "navigationFallback": {
-        "rewrite": "/index.html"
+  "routes": [
+    {
+      "route": "/api/*",
+      "methods": ["GET"]
     }
+  ],
+  "navigationFallback": {
+    "rewrite": "/index.html"
+  }
 }

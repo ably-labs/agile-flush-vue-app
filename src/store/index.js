@@ -250,7 +250,7 @@ export default new Vuex.Store({
     instantiateAblyConnection(vueContext, sessionId = null) {
       console.log('instantiateAblyConnection-sessionId:', sessionId);
       const ablyInstance = new Ably.Realtime({
-        authUrl: '/auth',
+        authUrl: '/api/createTokenRequest',
         echoMessages: false
       });
       ablyInstance.connection.once("connected", () => {
