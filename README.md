@@ -14,7 +14,7 @@ For more info developing Static Web Apps locally see the [official docs](https:/
 
 1. Clone this repository to your local machine.
 1. [Sign up](https://ably.com/signup) or [log in](https://ably.com/login) to [ably.com](https://www.ably.com), [create a new app and copy the API key](https://faqs.ably.com/setting-up-and-managing-api-keys).
-1. Add the following file to the `api` folder:
+1. Add a file named `local.settings.json` to the `api` folder and add the following content:
 
     ```json
     {
@@ -27,21 +27,31 @@ For more info developing Static Web Apps locally see the [official docs](https:/
     }
     ```
 
-1. Replace `<YOUR_ABLY_APP_KEY>` with the key you copied in step 2.
-1. In the root of the folder run:
+    - Replace `<YOUR_ABLY_APP_KEY>` with the key you copied in step 2.
+1. To install the dependencies, run this in the root of the repository:
+
+    ```cmd
+    npm install
+    ```
+
+1. To build the Vue application, run this in the root of the repository:
 
     ```cmd
     npm run build
     ```
 
-1. In the root of the folder run:
+1. To start the Static Web App, run this in the root of the repository:
 
     ```cmd
     swa start dist --api-location api
     ```
 
-1. Now open the link that is output by the swa command.
+1. Now open the link that is output by the `swa` command.
 
 ## Deploying the app to Azure
+
+// TODO
+
+## Tech Stack
 
 // TODO
