@@ -1,0 +1,10 @@
+{
+    "configurations": {
+      "app": {
+        "context": "http://localhost:8080",
+        "run": "npm run serve",
+        "apiLocation": "http://localhost:7071"
+      }
+    }
+  }
+  

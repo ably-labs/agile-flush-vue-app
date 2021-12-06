@@ -13,11 +13,8 @@
 		},
 		{
 			"type": "shell",
-			"label": "npm install (functions)",
-			"command": "npm install",
-			"options": {
-				"cwd": "${workspaceFolder}/api"
-			}
+			"label": "npm run serve",
+			"command": "npm run serve"
 		},
 		{
 			"type": "shell",

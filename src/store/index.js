@@ -251,8 +251,9 @@ export default new Vuex.Store({
       console.log('instantiateAblyConnection-sessionId:', sessionId);
       const ablyInstance = new Ably.Realtime({
         authUrl: '/api/createTokenRequest',
-        echoMessages: false
+        echoMessages: true
       });
+      console.log("auth: ", ablyInstance.auth);
       ablyInstance.connection.once("connected", () => {
         vueContext.commit("setAblyConnectionStatus", true);
         vueContext.commit("setAblyRealtimeInstance", ablyInstance);
@@ -317,6 +318,7 @@ export default new Vuex.Store({
     },
 
     subscribeToAblyPresence(vueContext) {
+      console.log('sub to presence action')
       this.state.channelInstances.voting.presence.subscribe(
         "enter",
         msg => {

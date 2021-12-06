@@ -1,6 +1,19 @@
 {
     "version": "0.2.0",
     "configurations": [
+        
+        {
+            "name": "Vue Edge",
+            "request": "launch",
+            "type": "pwa-msedge",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}/src",
+            "breakOnLoad": true,
+            "preLaunchTask": "npm run serve",
+            "sourceMapPathOverrides": {
+              "webpack:///src/*": "${webRoot}/*"
+            }
+        },
         {
             "name": "Attach to Node Functions",
             "type": "node",

@@ -26,7 +26,7 @@
       <button @click="reset">Reset votes</button>
       <h3>Cards</h3>
       <p>Click on a card to vote. To undo your vote, click the card again.</p>
-      <div class="cardlist">
+      <div class="card-list">
         <CardDetails
           class="card"
           v-for="card in getCards"
@@ -86,13 +86,13 @@ export default {
     reset() {
       this.resetVoting();
     },
-    created() {
-      console.log("routeSessionId:", this.routeSessionId);
-      this.instantiateAblyConnection(this.routeSessionId);
-    },
-    destroyed() {
-      this.closeAblyConnection();
-    }
+  },
+  created() {
+    console.log("routeSessionId:", this.routeSessionId);
+    this.instantiateAblyConnection(this.routeSessionId);
+  },
+  destroyed() {
+    this.closeAblyConnection();
   }
 };
 </script>
@@ -102,7 +102,7 @@ body {
   font-family: "Courier New", monospace;
 }
 
-.cardlist {
+.card-list {
   flex-direction: row;
   flex-flow: row wrap;
   display: flex;
