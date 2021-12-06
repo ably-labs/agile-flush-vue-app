@@ -40,7 +40,7 @@ For more info developing Static Web Apps locally see the [official docs](https:/
     npm run build
     ```
 
-1. To start the Static Web App, run this in the root of the repository:
+1. To start the Static Web App emulator, run this in the root of the repository:
 
     ```cmd
     swa start dist --api-location api
