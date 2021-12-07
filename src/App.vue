@@ -44,7 +44,7 @@
 import CardDetails from "./components/CardDetails.vue";
 import JoinDetails from "./components/JoinDetails.vue";
 import FooterDetails from "./components/FooterDetails.vue";
-import { generateName } from "./util/nameGenerator.js";
+
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -79,8 +79,7 @@ export default {
       "resetVoting"
     ]),
     start() {
-      let sessionId = generateName();
-      this.startSession(sessionId);
+      let sessionId = this.startSession();
       this.$router.replace({ path: `/`, query: { sessionId: sessionId } });
     },
     reset() {
@@ -88,8 +87,14 @@ export default {
     },
   },
   created() {
-    console.log("routeSessionId:", this.routeSessionId);
-    this.instantiateAblyConnection(this.routeSessionId);
+    this.startSession(this.routeSessionId);
+    let sessionId = this.getSessionId;
+    console.log("created sessionId", sessionId);
+    if (this.routeSessionId == null)
+    {
+      this.$router.replace({ path: `/`, query: { sessionId: sessionId } });
+    }
+    this.instantiateAblyConnection(sessionId);
   },
   destroyed() {
     this.closeAblyConnection();
@@ -100,6 +105,7 @@ export default {
 <style>
 body {
   font-family: "Courier New", monospace;
+  background-color: white;
 }
 
 .card-list {
