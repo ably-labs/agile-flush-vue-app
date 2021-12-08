@@ -284,6 +284,7 @@ export default new Vuex.Store({
     },
 
     startSession(vueContext, routeSessionId) {
+      console.log("startSession - routeId", routeSessionId);
       let sessionId;
       if (routeSessionId == null) {
         sessionId = generateName();
@@ -300,6 +301,7 @@ export default new Vuex.Store({
     },
 
     closeAblyConnection() {
+      console.log("closeAblyConnection");
       this.state.ablyRealtimeInstance.connection.close();
     },
 

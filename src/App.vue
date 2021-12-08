@@ -79,7 +79,10 @@ export default {
       "resetVoting"
     ]),
     start() {
-      let sessionId = this.startSession();
+      this.startSession();
+      let sessionId = this.getSessionId;
+      console.log("created sessionId", sessionId);
+      this.instantiateAblyConnection(sessionId);
       this.$router.replace({ path: `/`, query: { sessionId: sessionId } });
     },
     reset() {
@@ -87,14 +90,13 @@ export default {
     },
   },
   created() {
-    this.startSession(this.routeSessionId);
-    let sessionId = this.getSessionId;
-    console.log("created sessionId", sessionId);
-    if (this.routeSessionId == null)
+    console.log("created", this.routeSessionId);
+    if (this.routeSessionId != null && this.routeSessionId != undefined)
     {
-      this.$router.replace({ path: `/`, query: { sessionId: sessionId } });
+      this.startSession(this.routeSessionId);
+      let sessionId = this.getSessionId;
+      this.instantiateAblyConnection(sessionId);
     }
-    this.instantiateAblyConnection(sessionId);
   },
   destroyed() {
     this.closeAblyConnection();
