@@ -175,8 +175,8 @@ export default new Vuex.Store({
     },
     getIsAnyCardSelected: (state) => state.isAnyCardSelected,
     getCardIndex: (state) => (cardNumber) => {
-      return state.cards.findIndex((card) => card.number === cardNumber)
-    }
+      return state.cards.findIndex((card) => card.number === cardNumber);
+    },
   },
   mutations: {
     setAblyRealtimeInstance(state, ablyRealtimeInstance) {
@@ -308,8 +308,12 @@ export default new Vuex.Store({
     attachToAblyChannels(vueContext) {
       const channelName = `${this.state.channelNames.voting}-${this.state.sessionId}`;
       console.log("channelName", channelName);
-      const votingChannel =
-        this.state.ablyRealtimeInstance.channels.get(channelName);
+      const votingChannel = this.state.ablyRealtimeInstance.channels.get(
+        channelName,
+        {
+          params: { rewind: "5m" },
+        }
+      );
 
       vueContext.commit("setAblyChannelInstances", {
         voting: votingChannel,
