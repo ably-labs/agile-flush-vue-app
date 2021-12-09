@@ -6,8 +6,8 @@
     </p>
     <ol>
       <li :class="{ strike: getSessionStarted }">Start a new session.</li>
-      <li>Invite your team members by copying &amp; sharing the url.</li>
-      <li>Start voting for the user stories! 🚀</li>
+      <li :class="{ strike: getHaveParticipantsJoined }">Invite your team members by copying &amp; sharing the url.</li>
+      <li :class="{ strike: getIsAnyCardSelected }">Start voting for the user stories! 🚀</li>
     </ol>
     <button @click="start">
       {{ getSessionStarted ? "Start new session" : "Start session" }}
@@ -65,7 +65,9 @@ export default {
       "getShowResults",
       "getSessionId",
       "getSessionStarted",
-      "getCards"]),
+      "getCards",
+      "getHaveParticipantsJoined",
+      "getIsAnyCardSelected"]),
     routeSessionId() {
       return this.$route.query.sessionId;
     },

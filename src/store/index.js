@@ -164,6 +164,7 @@ export default new Vuex.Store({
     getVotingMessage: (state) => state.channelMessages.voting,
     getNrOfParticipantsJoined: (state) => state.participantsJoinedArr.length,
     getNrOfParticipantsVoted: (state) => state.participantsVotedArr.length,
+    getHaveParticipantsJoined: (state) => state.participantsJoinedArr.length > 1,
     getShowResults: (state) => state.showResults,
     getCards: (state) => state.cards,
     getCardsSortedByCountDescending: (state) => {
@@ -224,6 +225,9 @@ export default new Vuex.Store({
     toggleShowResults(state) {
       state.showResults = !state.showResults;
     },
+    setShowResults(state, showResults) {
+      state.showResults = showResults;
+    },
     resetCards(state) {
       state.cards.forEach((card) => {
         card.count = 0;
@@ -233,9 +237,6 @@ export default new Vuex.Store({
     },
     setNrOfParticipantVoted(state, nrOfParticipantsVoted) {
       state.nrOfParticipantsVoted = nrOfParticipantsVoted;
-    },
-    setShowResults(state, showResults) {
-      state.showResults = showResults;
     },
     selectCard(state, cardNumber) {
       console.log("selectCard", cardNumber);
@@ -298,6 +299,7 @@ export default new Vuex.Store({
       vueContext.commit("resetCards");
       vueContext.commit("setShowResults", false);
       vueContext.commit("setParticipantsVoted", []);
+      vueContext.dispatch("publishResetVotingToAbly");
     },
 
     closeAblyConnection() {
@@ -348,6 +350,12 @@ export default new Vuex.Store({
       this.state.channelInstances.voting.subscribe("undo-vote", (msg) => {
         vueContext.dispatch("handleUndoVoteReceived", msg);
       });
+      this.state.channelInstances.voting.subscribe("show-results", (msg) => {
+        vueContext.dispatch("handleShowResultsReceived", msg);
+      });
+      this.state.channelInstances.voting.subscribe("reset-voting", (msg) => {
+        vueContext.dispatch("handleResetVotesReceived", msg);
+      });
     },
 
     handleNewParticipantEntered(vueContext, participant) {
@@ -372,6 +380,22 @@ export default new Vuex.Store({
       vueContext.commit("removeParticipantsVoted", msg.data.id);
     },
 
+    handleShowResultsReceived(vueContext, msg) {
+      console.log("handleToggleVisibilityReceived", msg);
+      if (msg.data.showResults) {
+        vueContext.commit("setShowResults", true);
+      } else {
+        vueContext.commit("setShowResults", false);
+      }
+    },
+
+    handleResetVotesReceived(vueContext, msg) {
+      console.log("handleResetVotesReceived", msg);
+      vueContext.commit("resetCards");
+      vueContext.commit("setShowResults", false);
+      vueContext.commit("setParticipantsVoted", []);
+    },
+
     enterClientInAblyPresenceSet() {
       this.state.channelInstances.voting.presence.enter({
         id: this.state.ablyClientId,
@@ -380,6 +404,7 @@ export default new Vuex.Store({
 
     toggleShowResults(vueContext) {
       vueContext.commit("toggleShowResults");
+      vueContext.dispatch("publishShowResultsToAbly", this.getters.getShowResults);
     },
 
     doVote(vueContext, cardNumber) {
@@ -403,11 +428,22 @@ export default new Vuex.Store({
         cardNumber: cardNumber,
       });
     },
+
     publishUndoVoteToAbly({ state }, cardNumber) {
       state.channelInstances.voting.publish("undo-vote", {
         id: state.ablyClientId,
         cardNumber: cardNumber,
       });
+    },
+
+    publishShowResultsToAbly({ state }, showResults) {
+      state.channelInstances.voting.publish("show-results", {
+        showResults: showResults,
+      });
+    },
+
+    publishResetVotingToAbly({ state }) {
+      state.channelInstances.voting.publish("reset-voting");
     },
   },
 });
