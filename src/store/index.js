@@ -447,7 +447,7 @@ export default new Vuex.Store({
     },
 
     publishResetVotingToAbly({ state }) {
-      state.channelInstances.voting.publish("reset-voting");
+      state.channelInstances.voting.publish("reset-voting", {});
     },
   },
 });
