@@ -278,9 +278,9 @@ export default new Vuex.Store({
           vueContext.commit("setSessionId", sessionId);
         }
         vueContext.dispatch("attachToAblyChannels");
+        vueContext.dispatch("enterClientInAblyPresenceSet");
         vueContext.dispatch("getExistingAblyPresenceSet");
         vueContext.dispatch("subscribeToAblyPresence");
-        vueContext.dispatch("enterClientInAblyPresenceSet");
       });
     },
 
