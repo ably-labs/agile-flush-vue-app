@@ -296,10 +296,16 @@ export default new Vuex.Store({
     },
 
     resetVoting(vueContext) {
+      vueContext.dispatch("commonResetVoting");
+      vueContext.dispatch("publishResetVotingToAbly");
+    },
+
+    commonResetVoting(vueContext) {
+      let flush = new Audio("flush.mp3");
+      flush.play();
       vueContext.commit("resetCards");
       vueContext.commit("setShowResults", false);
       vueContext.commit("setParticipantsVoted", []);
-      vueContext.dispatch("publishResetVotingToAbly");
     },
 
     closeAblyConnection() {
@@ -395,9 +401,7 @@ export default new Vuex.Store({
 
     handleResetVotesReceived(vueContext, msg) {
       console.log("handleResetVotesReceived", msg);
-      vueContext.commit("resetCards");
-      vueContext.commit("setShowResults", false);
-      vueContext.commit("setParticipantsVoted", []);
+      vueContext.dispatch("commonResetVoting");
     },
 
     enterClientInAblyPresenceSet() {
