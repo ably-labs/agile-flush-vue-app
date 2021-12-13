@@ -12,7 +12,8 @@ export default new Vuex.Store({
     ablyClientId: null,
     sessionId: null,
     participantsJoinedArr: [],
-    participantsVotedArr: [],
+    participantsVotedDict: {},
+    nrOfParticipantsVoted: 0,
     channelNames: {
       voting: "voting",
     },
@@ -177,19 +178,12 @@ export default new Vuex.Store({
     getSessionStarted: (state) =>
       state.sessionId !== null && state.sessionId !== undefined,
     getVotingChannel: (state) => state.channelInstances.voting,
-    getVotingMessage: (state) => state.channelMessages.voting,
     getNrOfParticipantsJoined: (state) => state.participantsJoinedArr.length,
-    getNrOfParticipantsVoted: (state) => state.participantsVotedArr.length,
     getHaveParticipantsJoined: (state) => state.participantsJoinedArr.length > 1,
+    getNrOfParticipantsVoted: (state) => state.nrOfParticipantsVoted,
     getShowResults: (state) => state.showResults,
     getCards: (state) => state.cards,
-    getCardsSortedByCountDescending: (state) => {
-      return state.cards
-        .filter((card) => card.count > 0)
-        .sort(function (a, b) {
-          b.count - a.count;
-        });
-    },
+    getSelectedCard: (state) => state.cards.filter((card) => card.isSelected)[0],
     getIsAnyCardSelected: (state) => state.isAnyCardSelected,
     getCardIndex: (state) => (cardNumber) => {
       return state.cards.findIndex((card) => card.number === cardNumber);
@@ -211,7 +205,7 @@ export default new Vuex.Store({
     setAblyChannelInstances(state, { voting }) {
       state.channelInstances.voting = voting;
     },
-    setParticipantsJoined(state, participantsJoined) {
+    setParticipantJoined(state, participantsJoined) {
       state.participantsJoinedArr = participantsJoined;
     },
     addParticipantJoined(state, clientId) {
@@ -225,18 +219,21 @@ export default new Vuex.Store({
         1
       );
     },
-    addParticipantsVoted(state, clientId) {
-      console.log("addParticipantsVoted", clientId);
-      state.participantsVotedArr.push(clientId);
+    addParticipantVoted(state, clientVote) {
+      console.log("addParticipantVoted", clientVote);
+      state.participantsVotedDict[clientVote.clientId] = clientVote.cardNumber;
+      state.nrOfParticipantsVoted++;
     },
-    removeParticipantsVoted(state, clientId) {
-      state.participantsVotedArr.splice(
-        state.participantsVotedArr.findIndex((id) => id === clientId),
-        1
-      );
+    removeParticipantVoted(state, clientId) {
+      console.log("removeParticipantVoted", clientId);
+      delete state.participantsVotedDict[clientId];
+      state.nrOfParticipantsVoted--;
     },
-    setParticipantsVoted(state, participantsVoted) {
-      state.participantsVotedArr = participantsVoted;
+    setNrOfParticipantsVoted(state, number) {
+      state.nrOfParticipantsVoted = number;
+    },
+    setParticipantVotedDict(state, participantsVoted) {
+      state.participantsVotedDict = participantsVoted;
     },
     toggleShowResults(state) {
       state.showResults = !state.showResults;
@@ -277,27 +274,28 @@ export default new Vuex.Store({
 
   actions: {
     instantiateAblyConnection(vueContext, sessionId = null) {
-      console.log("instantiateAblyConnection-sessionId:", sessionId);
-      const ablyInstance = new Ably.Realtime({
-        authUrl: "/api/createTokenRequest",
-        echoMessages: false,
-      });
-      console.log("auth: ", ablyInstance.auth);
-      ablyInstance.connection.once("connected", () => {
-        vueContext.commit("setAblyConnectionStatus", true);
-        vueContext.commit("setAblyRealtimeInstance", ablyInstance);
-        vueContext.commit(
-          "setAblyClientId",
-          this.state.ablyRealtimeInstance.auth.clientId
-        );
-        if (sessionId) {
-          vueContext.commit("setSessionId", sessionId);
-        }
-        vueContext.dispatch("attachToAblyChannels");
-        vueContext.dispatch("enterClientInAblyPresenceSet");
-        vueContext.dispatch("getExistingAblyPresenceSet");
-        vueContext.dispatch("subscribeToAblyPresence");
-      });
+      if (!this.getters.getIsAblyConnectedStatus) {
+        const ablyInstance = new Ably.Realtime({
+          authUrl: "/api/createTokenRequest",
+          echoMessages: false,
+        });
+        console.log("auth: ", ablyInstance.auth);
+        ablyInstance.connection.once("connected", () => {
+          vueContext.commit("setAblyConnectionStatus", true);
+          vueContext.commit("setAblyRealtimeInstance", ablyInstance);
+          vueContext.commit(
+            "setAblyClientId",
+            this.state.ablyRealtimeInstance.auth.clientId
+          );
+          if (sessionId) {
+            vueContext.commit("setSessionId", sessionId);
+          }
+          vueContext.dispatch("attachToAblyChannels");
+          vueContext.dispatch("enterClientInAblyPresenceSet");
+          vueContext.dispatch("getExistingAblyPresenceSet");
+          vueContext.dispatch("subscribeToAblyPresence");
+        });
+      }
     },
 
     startSession(vueContext, routeSessionId) {
@@ -321,7 +319,8 @@ export default new Vuex.Store({
       flush.play();
       vueContext.commit("resetCards");
       vueContext.commit("setShowResults", false);
-      vueContext.commit("setParticipantsVoted", []);
+      vueContext.commit("setNrOfParticipantsVoted", 0);
+      vueContext.commit("setParticipantVotedDict", {});
     },
 
     closeAblyConnection() {
@@ -335,7 +334,7 @@ export default new Vuex.Store({
       const votingChannel = this.state.ablyRealtimeInstance.channels.get(
         channelName,
         {
-          params: { rewind: "5m" },
+          params: { rewind: "2m" },
         }
       );
 
@@ -351,7 +350,9 @@ export default new Vuex.Store({
         if (!err) {
           console.log("getExistingAblyPresenceSet", participants);
           for (let i = 0; i < participants.length; i++) {
-            vueContext.commit("addParticipantJoined", participants[i].clientId);
+            if (participants[i].clientId !== this.getters.ablyClientId) {
+              vueContext.commit("addParticipantJoined", participants[i].clientId);
+            }
           }
         } else {
           console.log(err);
@@ -390,20 +391,24 @@ export default new Vuex.Store({
     },
 
     handleExistingParticipantLeft(vueContext, participant) {
-      console.log("handleExistingParticipantLeft", participant);
       vueContext.commit("removeParticipantJoined", participant.clientId);
+      console.log("clientId+Vote", participant.clientId, this.state.participantsVotedDict[participant.clientId]);
+      if (this.state.participantsVotedDict[participant.clientId] !== undefined) {
+        vueContext.commit("decrementCardCount", this.state.participantsVotedDict[participant.clientId]);
+        vueContext.commit("removeParticipantVoted", participant.clientId);
+      }
     },
 
     handleVoteReceived(vueContext, msg) {
       console.log("handleVoteReceived", msg);
       vueContext.commit("incrementCardCount", msg.data.cardNumber);
-      vueContext.commit("addParticipantsVoted", msg.data.id);
+      vueContext.commit("addParticipantVoted", { "clientId": msg.clientId, "cardNumber": msg.data.cardNumber} );
     },
 
     handleUndoVoteReceived(vueContext, msg) {
       console.log("handleUndoVoteReceived", msg);
       vueContext.commit("decrementCardCount", msg.data.cardNumber);
-      vueContext.commit("removeParticipantsVoted", msg.data.id);
+      vueContext.commit("removeParticipantVoted", msg.clientId);
     },
 
     handleShowResultsReceived(vueContext, msg) {
@@ -435,13 +440,13 @@ export default new Vuex.Store({
       console.log("doVote", cardNumber);
       vueContext.commit("selectCard", cardNumber);
       vueContext.commit("incrementCardCount", cardNumber);
-      vueContext.commit("addParticipantsVoted", this.state.ablyClientId);
+      vueContext.commit("addParticipantVoted", { "clientId": this.state.ablyClientId, "cardNumber": cardNumber });
       vueContext.dispatch("publishVoteToAbly", cardNumber);
     },
     undoVote(vueContext, cardNumber) {
       vueContext.commit("deselectCard", cardNumber);
       vueContext.commit("decrementCardCount", cardNumber);
-      vueContext.commit("removeParticipantsVoted", this.state.ablyClientId);
+      vueContext.commit("removeParticipantVoted", this.state.ablyClientId);
       vueContext.dispatch("publishUndoVoteToAbly", cardNumber);
     },
 

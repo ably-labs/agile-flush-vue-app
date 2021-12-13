@@ -10,8 +10,8 @@ export default {
   computed: {
     ...mapGetters([
       "getNrOfParticipantsVoted",
-      "getNrOfParticipantsJoined"])
-  },
+      "getNrOfParticipantsJoined"]),
+  }
 };
 </script>
 

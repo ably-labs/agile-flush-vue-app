@@ -33,7 +33,7 @@ export default {
       this.instantiateAblyConnection(sessionId);
     }
   },
-  destroyed() {
+  beforeUnmount() {
     this.closeAblyConnection();
   }
 };
