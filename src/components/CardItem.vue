@@ -9,7 +9,7 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  name: "CardDetails",
+  name: "CardItem",
   props: {
     card: Object
   },
