@@ -20,9 +20,6 @@ export default new Vuex.Store({
     channelInstances: {
       voting: null,
     },
-    channelMessages: {
-      voting: null,
-    },
     showResults: false,
     isAnyCardSelected: false,
     cards: [
@@ -206,7 +203,9 @@ export default new Vuex.Store({
       state.channelInstances.voting = voting;
     },
     addParticipantJoined(state, clientId) {
-      state.participantsJoinedArr.push(clientId);
+      if (!state.participantsJoinedArr.includes(clientId)) {
+        state.participantsJoinedArr.push(clientId);
+      }
     },
     removeParticipantJoined(state, clientId) {
       state.participantsJoinedArr.splice(
@@ -291,9 +290,9 @@ export default new Vuex.Store({
             vueContext.commit("setSessionId", sessionId);
           }
           vueContext.dispatch("attachToAblyChannels");
-          vueContext.dispatch("enterClientInAblyPresenceSet");
           vueContext.dispatch("getExistingAblyPresenceSet");
           vueContext.dispatch("subscribeToAblyPresence");
+          vueContext.dispatch("enterClientInAblyPresenceSet");
         });
       }
     },
@@ -324,9 +323,7 @@ export default new Vuex.Store({
         if (!err) {
           console.log("getExistingAblyPresenceSet", participants);
           for (let i = 0; i < participants.length; i++) {
-            if (participants[i].clientId !== this.getters.ablyClientId) {
-              vueContext.commit("addParticipantJoined", participants[i].clientId);
-            }
+            vueContext.commit("addParticipantJoined", participants[i].clientId);
           }
         } else {
           console.log(err);
