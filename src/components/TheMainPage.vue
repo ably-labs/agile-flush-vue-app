@@ -23,7 +23,7 @@
       <button @click="toggleShowResults">
         {{ getShowResults ? "Hide votes" : "Show votes" }}
       </button>
-      <button @click="reset">Flush votes</button>
+      <button @click="reset" :disabled="!getShowResults">Flush votes</button>
       <h3>Cards</h3>
       <p>Click on a card to vote. To undo your vote, click the card again.</p>
       <div class="card-list">
