@@ -30,6 +30,7 @@ export default {
     if (this.routeSessionId != null && this.routeSessionId != undefined) {
       this.startSession(this.routeSessionId);
       let sessionId = this.getSessionId;
+      document.title = `Agile Flush - ${sessionId}`;
       this.instantiateAblyConnection(sessionId);
     }
   },

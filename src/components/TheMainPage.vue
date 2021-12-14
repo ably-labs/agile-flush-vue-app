@@ -82,7 +82,9 @@ export default {
       let sessionId = this.getSessionId;
       console.log("created sessionId", sessionId);
       this.instantiateAblyConnection(sessionId);
+      document.title = `Agile Flush - ${sessionId}`;
       this.$router.replace({ path: `/`, query: { sessionId: sessionId } });
+      navigator.clipboard.writeText(window.location.href);
     },
     reset() {
       this.resetVoting();
