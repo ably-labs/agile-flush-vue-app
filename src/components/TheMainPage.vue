@@ -100,12 +100,12 @@ body {
 }
 
 .success::after {
-  content: '&#10003;';
+  content: '\2705';
   padding-left: 10px;
 }
 
 .failed::after {
-  content: '&#10060;';
+  content: '\274C';
   padding-left: 10px;
 }
 
