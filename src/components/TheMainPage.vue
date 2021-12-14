@@ -100,12 +100,12 @@ body {
 }
 
 .success::after {
-  content: '✔️';
+  content: '&#10003;';
   padding-left: 10px;
 }
 
 .failed::after {
-  content: '❌';
+  content: '&#10060;';
   padding-left: 10px;
 }
 
