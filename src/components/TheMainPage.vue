@@ -13,7 +13,7 @@
       {{ getSessionStarted ? "Start new session" : "Start session" }}
     </button>
     <div v-if="getSessionStarted">
-      <h2>Session: {{ getSessionId }}</h2>
+      <h2 :class="{ success: getIsAblyConnectedStatus, failed: !getIsAblyConnectedStatus}">Session: {{ getSessionId }}</h2>
       <JoinDetails />
       <p>
         Once everyone has submitted their vote, click the
@@ -61,6 +61,7 @@ export default {
   },
   computed: {
     ...mapGetters([
+      "getIsAblyConnectedStatus",
       "getShowResults",
       "getSessionId",
       "getSessionStarted",
@@ -94,6 +95,16 @@ export default {
 body {
   font-family: "Courier New", monospace;
   background-color: white;
+}
+
+.success::after {
+  content: '✔️';
+  padding-left: 10px;
+}
+
+.failed::after {
+  content: '❌';
+  padding-left: 10px;
 }
 
 .card-list {
