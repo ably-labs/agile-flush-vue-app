@@ -1,7 +1,7 @@
 <template>
   <div :id="card.number" @click="selectCard(card.number)">
     <p :class="{ selected: card.isSelected }">{{ card.visual }}</p>
-    <p class="votecount" v-if="getShowResults">{{ card.count }}</p>
+    <p class="votecount" v-if="getShowResults">{{ this.getVoteCountForCard(card.number) }}</p>
   </div>
 </template>
 
@@ -16,7 +16,8 @@ export default {
   computed: {
     ...mapGetters([
       "getShowResults",
-      "getIsAnyCardSelected"])
+      "getIsAnyCardSelected",
+      "getVoteCountForCard"])
   },
   methods: {
     ...mapActions([

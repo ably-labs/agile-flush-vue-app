@@ -25,7 +25,7 @@ export default new Vuex.Store({
     cards: [
       {
         number: "0",
-        count: 0,
+        count: [],
         isSelected: false,
         visual: ` .----------------.
 | .--------------. |
@@ -41,7 +41,7 @@ export default new Vuex.Store({
       },
       {
         number: "0.5",
-        count: 0,
+        count: [],
         isSelected: false,
         visual: ` .----------------.
 | .--------------. |
@@ -57,7 +57,7 @@ export default new Vuex.Store({
       },
       {
         number: "1",
-        count: 0,
+        count: [],
         isSelected: false,
         visual: ` .----------------.
 | .--------------. |
@@ -73,7 +73,7 @@ export default new Vuex.Store({
       },
       {
         number: "2",
-        count: 0,
+        count: [],
         isSelected: false,
         visual: ` .----------------.
 | .--------------. |
@@ -89,7 +89,7 @@ export default new Vuex.Store({
       },
       {
         number: "3",
-        count: 0,
+        count: [],
         isSelected: false,
         visual: ` .----------------.
 | .--------------. |
@@ -105,7 +105,7 @@ export default new Vuex.Store({
       },
       {
         number: "5",
-        count: 0,
+        count: [],
         isSelected: false,
         visual: ` .----------------.
 | .--------------. |
@@ -137,7 +137,7 @@ export default new Vuex.Store({
       },
       {
         number: "13",
-        count: 0,
+        count: [],
         isSelected: false,
         visual: ` .--------------------------.
 | .------------------------. |
@@ -153,7 +153,7 @@ export default new Vuex.Store({
       },
       {
         number: "21",
-        count: 0,
+        count: [],
         isSelected: false,
         visual: ` .--------------------------.
 | .------------------------. |
@@ -180,10 +180,12 @@ export default new Vuex.Store({
     getNrOfParticipantsVoted: (state) => state.nrOfParticipantsVoted,
     getShowResults: (state) => state.showResults,
     getCards: (state) => state.cards,
-    getSelectedCard: (state) => state.cards.filter((card) => card.isSelected)[0],
     getIsAnyCardSelected: (state) => state.isAnyCardSelected,
     getCardIndex: (state) => (cardNumber) => {
       return state.cards.findIndex((card) => card.number === cardNumber);
+    },
+    getVoteCountForCard: (state) => (cardNumber) => {
+      return state.cards.filter((card) => card.number === cardNumber)[0].count.length;
     },
   },
   mutations: {
@@ -217,12 +219,27 @@ export default new Vuex.Store({
     },
     addParticipantVoted(state, clientVote) {
       console.log("addParticipantVoted", clientVote);
+      let index = this.getters.getCardIndex(clientVote.cardNumber);
+      if (!state.cards[index].count.includes(clientVote.clientId)) {
+        state.cards[index].count.push(clientVote.clientId);
+      }
       state.participantsVotedDict[clientVote.clientId] = clientVote.cardNumber;
       state.nrOfParticipantsVoted++;
     },
-    removeParticipantVoted(state, clientId) {
-      console.log("removeParticipantVoted", clientId);
-      delete state.participantsVotedDict[clientId];
+
+    removeParticipantVoted(state, clientVote) {
+      console.log("removeParticipantVoted", clientVote);
+      let index = this.getters.getCardIndex(clientVote.cardNumber);
+      if (state.cards[index].count.includes(clientVote.clientId)) {
+        state.cards[index].count.splice(
+          state.cards[index].count.findIndex(
+            (id) => id === clientVote.clientId
+          ),
+          1
+        );
+      }
+
+      delete state.participantsVotedDict[clientVote.clientId];
       if (state.nrOfParticipantsVoted > 0) {
         state.nrOfParticipantsVoted--;
       }
@@ -241,7 +258,7 @@ export default new Vuex.Store({
     },
     resetCards(state) {
       state.cards.forEach((card) => {
-        card.count = 0;
+        card.count = [];
         card.isSelected = false;
       });
       state.isAnyCardSelected = false;
@@ -254,20 +271,10 @@ export default new Vuex.Store({
       state.cards[index].isSelected = true;
       state.isAnyCardSelected = true;
     },
-    incrementCardCount(state, cardNumber) {
-      let index = this.getters.getCardIndex(cardNumber);
-      state.cards[index].count++;
-    },
     deselectCard(state, cardNumber) {
       let index = this.getters.getCardIndex(cardNumber);
       state.cards[index].isSelected = false;
       state.isAnyCardSelected = false;
-    },
-    decrementCardCount(state, cardNumber) {
-      let index = this.getters.getCardIndex(cardNumber);
-      if (state.cards[index].count > 0) {
-        state.cards[index].count--;
-      }
     },
   },
 
@@ -338,6 +345,9 @@ export default new Vuex.Store({
       this.state.channelInstances.voting.presence.subscribe("leave", (msg) => {
         vueContext.dispatch("handleExistingParticipantLeft", msg);
       });
+      this.state.channelInstances.voting.presence.subscribe("update", (msg) => {
+        vueContext.dispatch("handleParticipantUpdate", msg);
+      });
     },
 
     handleNewParticipantEntered(vueContext, participant) {
@@ -346,11 +356,10 @@ export default new Vuex.Store({
     },
 
     handleExistingParticipantLeft(vueContext, participant) {
+      console.log("handleExistingParticipantLeft", participant);
       vueContext.commit("removeParticipantJoined", participant.clientId);
-      console.log("clientId+Vote", participant.clientId, this.state.participantsVotedDict[participant.clientId]);
       if (this.state.participantsVotedDict[participant.clientId] !== undefined) {
-        vueContext.commit("decrementCardCount", this.state.participantsVotedDict[participant.clientId]);
-        vueContext.commit("removeParticipantVoted", participant.clientId);
+        vueContext.commit("removeParticipantVoted", { "clientId": participant.clientId, "cardNumber": this.state.participantsVotedDict[participant.clientId] });
       }
     },
 
@@ -372,14 +381,12 @@ export default new Vuex.Store({
 
     handleVoteReceived(vueContext, msg) {
       console.log("handleVoteReceived", msg);
-      vueContext.commit("incrementCardCount", msg.data.cardNumber);
       vueContext.commit("addParticipantVoted", { "clientId": msg.clientId, "cardNumber": msg.data.cardNumber} );
     },
 
     handleUndoVoteReceived(vueContext, msg) {
       console.log("handleUndoVoteReceived", msg);
-      vueContext.commit("decrementCardCount", msg.data.cardNumber);
-      vueContext.commit("removeParticipantVoted", msg.clientId);
+      vueContext.commit("removeParticipantVoted", { "clientId": msg.clientId, "cardNumber": msg.data.cardNumber });
     },
 
     handleShowResultsReceived(vueContext, msg) {
@@ -444,7 +451,6 @@ export default new Vuex.Store({
     doVote(vueContext, cardNumber) {
       console.log("doVote", cardNumber);
       vueContext.commit("selectCard", cardNumber);
-      vueContext.commit("incrementCardCount", cardNumber);
       vueContext.commit("addParticipantVoted", { "clientId": this.state.ablyClientId, "cardNumber": cardNumber });
       vueContext.dispatch("publishVoteToAbly", cardNumber);
     },
@@ -459,8 +465,7 @@ export default new Vuex.Store({
 
     undoVote(vueContext, cardNumber) {
       vueContext.commit("deselectCard", cardNumber);
-      vueContext.commit("decrementCardCount", cardNumber);
-      vueContext.commit("removeParticipantVoted", this.state.ablyClientId);
+      vueContext.commit("removeParticipantVoted", { "clientId": this.state.ablyClientId, "cardNumber": cardNumber } );
       vueContext.dispatch("publishUndoVoteToAbly", cardNumber);
     },
 
