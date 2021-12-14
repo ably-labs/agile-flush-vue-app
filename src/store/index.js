@@ -290,7 +290,6 @@ export default new Vuex.Store({
           authUrl: "/api/createTokenRequest",
           echoMessages: false,
         });
-        console.log("auth: ", ablyInstance.auth);
         ablyInstance.connection.once("connected", () => {
           vueContext.commit("setAblyConnectionStatus", true);
           vueContext.commit("setAblyRealtimeInstance", ablyInstance);
@@ -305,6 +304,9 @@ export default new Vuex.Store({
           vueContext.dispatch("getExistingAblyPresenceSet");
           vueContext.dispatch("subscribeToAblyPresence");
           vueContext.dispatch("enterClientInAblyPresenceSet");
+        });
+        ablyInstance.connection.once("disconnected", () => {
+          vueContext.commit("setAblyConnectionStatus", false);
         });
       }
     },
@@ -349,9 +351,6 @@ export default new Vuex.Store({
       });
       this.state.channelInstances.voting.presence.subscribe("leave", (msg) => {
         vueContext.dispatch("handleExistingParticipantLeft", msg);
-      });
-      this.state.channelInstances.voting.presence.subscribe("update", (msg) => {
-        vueContext.dispatch("handleParticipantUpdate", msg);
       });
     },
 
