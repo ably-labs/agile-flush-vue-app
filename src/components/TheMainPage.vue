@@ -7,7 +7,7 @@
     <ol>
       <li :class="{ strike: getSessionStarted }">Start a new session.</li>
       <li :class="{ strike: getHaveParticipantsJoined }">Invite your team members by copying &amp; sharing the url.</li>
-      <li :class="{ strike: getIsAnyCardSelected }">Start voting for the user stories! 🚀</li>
+      <li :class="{ strike: getIsAnyCardSelectedByClient }">Start voting for the user stories! 🚀</li>
     </ol>
     <button @click="start" v-if="!getSessionStarted">
       {{ getSessionStarted ? "Start new session" : "Start session" }}
@@ -23,7 +23,7 @@
       <button @click="toggleShowResults">
         {{ getShowResults ? "Hide votes" : "Show votes" }}
       </button>
-      <button @click="reset">Reset votes</button>
+      <button @click="reset">Flush votes</button>
       <h3>Cards</h3>
       <p>Click on a card to vote. To undo your vote, click the card again.</p>
       <div class="card-list">
@@ -67,7 +67,7 @@ export default {
       "getSessionStarted",
       "getCards",
       "getHaveParticipantsJoined",
-      "getIsAnyCardSelected"]),
+      "getIsAnyCardSelectedByClient"]),
     },
    methods: {
     ...mapActions([
@@ -79,11 +79,10 @@ export default {
     ]),
     start() {
       this.startSession();
-      let sessionId = this.getSessionId;
-      console.log("created sessionId", sessionId);
-      this.instantiateAblyConnection(sessionId);
-      document.title = `Agile Flush - ${sessionId}`;
-      this.$router.replace({ path: `/`, query: { sessionId: sessionId } });
+      console.log("created sessionId", this.getSessionId);
+      this.instantiateAblyConnection( { "sessionId": this.getSessionId });
+      document.title = `Agile Flush - ${this.getSessionId}`;
+      this.$router.replace({ path: `/`, query: { sessionId: this.getSessionId } });
       navigator.clipboard.writeText(window.location.href);
     },
     reset() {

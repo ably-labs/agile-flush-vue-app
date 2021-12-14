@@ -17,6 +17,9 @@ export default {
     routeSessionId() {
       return this.$route.query.sessionId;
     },
+    routeClientId() {
+      return this.$route.query.clientId;
+    },
   },
   methods: {
     ...mapActions([
@@ -26,12 +29,12 @@ export default {
     ]),
   },
   created() {
-    console.log("created", this.routeSessionId);
-    if (this.routeSessionId != null && this.routeSessionId != undefined) {
+    console.log("created", this.routeSessionId, this.routeClientId);
+    if (this.routeSessionId !== undefined) {
       this.startSession(this.routeSessionId);
       let sessionId = this.getSessionId;
       document.title = `Agile Flush - ${sessionId}`;
-      this.instantiateAblyConnection(sessionId);
+      this.instantiateAblyConnection( { "sessionId": sessionId, "clientId": this.routeClientId });
     }
   },
   beforeUnmount() {

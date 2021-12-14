@@ -1,6 +1,6 @@
 <template>
   <div :id="card.number" @click="selectCard(card.number)">
-    <p :class="{ selected: card.isSelected }">{{ card.visual }}</p>
+    <p :class="{ selected: this.getIsCardSelectedByClient(card.number) }">{{ card.visual }}</p>
     <p class="votecount" v-if="getShowResults">{{ this.getVoteCountForCard(card.number) }}</p>
   </div>
 </template>
@@ -16,8 +16,17 @@ export default {
   computed: {
     ...mapGetters([
       "getShowResults",
-      "getIsAnyCardSelected",
-      "getVoteCountForCard"])
+      "getSessionId",
+      "getClientId",
+      "getIsCardSelectedByClient",
+      "getIsAnyCardSelectedByClient",
+      "getVoteCountForCard"]),
+    routeSessionId() {
+      return this.$route.query.sessionId;
+    },
+    routeClientId() {
+      return this.$route.query.clientId;
+    },
   },
   methods: {
     ...mapActions([
@@ -25,10 +34,14 @@ export default {
       "undoVote"
     ]),
     selectCard(number) {
-      if (this.getIsAnyCardSelected === false) {
+      if (this.getIsAnyCardSelectedByClient === false) {
         this.doVote(number);
-      } else if (this.getIsAnyCardSelected && this.card.isSelected) {
+      } else if (this.getIsAnyCardSelectedByClient && this.getIsCardSelectedByClient(this.card.number)) {
         this.undoVote(number);
+      }
+      console.log(this.routeSessionId, this.routeClientId)
+      if (this.routeSessionId === undefined || this.routeClientId === undefined) {
+        this.$router.replace({ path: `/`, query: { sessionId: this.getSessionId, clientId: this.getClientId } });
       }
     }
   }

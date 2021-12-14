@@ -21,12 +21,10 @@ export default new Vuex.Store({
       voting: null,
     },
     showResults: false,
-    isAnyCardSelected: false,
     cards: [
       {
         number: "0",
         count: [],
-        isSelected: false,
         visual: ` .----------------.
 | .--------------. |
 | |     ____     | |
@@ -42,7 +40,6 @@ export default new Vuex.Store({
       {
         number: "0.5",
         count: [],
-        isSelected: false,
         visual: ` .----------------.
 | .--------------. |
 | | __           | |
@@ -58,7 +55,6 @@ export default new Vuex.Store({
       {
         number: "1",
         count: [],
-        isSelected: false,
         visual: ` .----------------.
 | .--------------. |
 | |     __       | |
@@ -74,7 +70,6 @@ export default new Vuex.Store({
       {
         number: "2",
         count: [],
-        isSelected: false,
         visual: ` .----------------.
 | .--------------. |
 | |    _____     | |
@@ -90,7 +85,6 @@ export default new Vuex.Store({
       {
         number: "3",
         count: [],
-        isSelected: false,
         visual: ` .----------------.
 | .--------------. |
 | |    ______    | |
@@ -106,7 +100,6 @@ export default new Vuex.Store({
       {
         number: "5",
         count: [],
-        isSelected: false,
         visual: ` .----------------.
 | .--------------. |
 | |   _______    | |
@@ -121,8 +114,7 @@ export default new Vuex.Store({
       },
       {
         number: "8",
-        count: 0,
-        isSelected: false,
+        count: [],
         visual: ` .----------------.
 | .--------------. |
 | |     ____     | |
@@ -138,7 +130,6 @@ export default new Vuex.Store({
       {
         number: "13",
         count: [],
-        isSelected: false,
         visual: ` .--------------------------.
 | .------------------------. |
 | |     __      ______     | |
@@ -154,7 +145,6 @@ export default new Vuex.Store({
       {
         number: "21",
         count: [],
-        isSelected: false,
         visual: ` .--------------------------.
 | .------------------------. |
 | |     _____      __      | |
@@ -171,21 +161,37 @@ export default new Vuex.Store({
   },
   getters: {
     getIsAblyConnectedStatus: (state) => state.isAblyConnected,
+    getClientId: (state) => state.ablyClientId,
     getSessionId: (state) => state.sessionId,
     getSessionStarted: (state) =>
       state.sessionId !== null && state.sessionId !== undefined,
     getNrOfParticipantsJoined: (state) => state.participantsJoinedArr.length,
-    getHaveParticipantsJoined: (state) => state.participantsJoinedArr.length > 1,
+    getHaveParticipantsJoined: (state) =>
+      state.participantsJoinedArr.length > 1,
     getNrOfParticipantsVoted: (state) => state.nrOfParticipantsVoted,
     getShowResults: (state) => state.showResults,
     getCards: (state) => state.cards,
-    getIsAnyCardSelected: (state) => state.isAnyCardSelected,
     getCardIndex: (state) => (cardNumber) => {
-      return state.cards.findIndex(card => card.number === cardNumber);
+      return state.cards.findIndex((card) => card.number === cardNumber);
     },
     getVoteCountForCard: (state) => (cardNumber) => {
-      return state.cards.filter(card => card.number === cardNumber)[0].count.length;
+      return state.cards.filter((card) => card.number === cardNumber)[0].count
+        .length;
     },
+    getIsCardSelectedByClient: (state) => (cardNumber) => {
+      let clientIds = state.cards.filter(card => card.number === cardNumber)[0].count;
+      if (clientIds.length > 0) {
+        return clientIds.includes(state.ablyClientId);
+      } else {
+        return false;
+      }
+    },
+    getIsAnyCardSelectedByClient: (state) => {
+      let cardCount = state.cards.filter(
+        card => card.count.length > 0 && card.count.includes(state.ablyClientId)
+      ).length;
+      return cardCount > 0;
+    }
   },
   mutations: {
     setAblyRealtimeInstance(state, ablyRealtimeInstance) {
@@ -232,7 +238,7 @@ export default new Vuex.Store({
       if (state.cards[index].count.includes(clientVote.clientId)) {
         state.cards[index].count.splice(
           state.cards[index].count.findIndex(
-            id => id === clientVote.clientId
+            (id) => id === clientVote.clientId
           ),
           1
         );
@@ -256,17 +262,10 @@ export default new Vuex.Store({
       state.showResults = showResults;
     },
     resetCards(state) {
-      state.cards.forEach(card => {
+      state.cards.forEach((card) => {
         card.count = [];
-        card.isSelected = false;
       });
       state.isAnyCardSelected = false;
-    },
-    checkClientVotes(state) {
-      state.cards.forEach(card => {
-        card.count = [];
-        card.isSelected = false;
-      });
     },
     setNrOfParticipantVoted(state, nrOfParticipantsVoted) {
       state.nrOfParticipantsVoted = nrOfParticipantsVoted;
@@ -284,7 +283,7 @@ export default new Vuex.Store({
   },
 
   actions: {
-    instantiateAblyConnection(vueContext, sessionId = null) {
+    instantiateAblyConnection(vueContext, ids) {
       if (!this.getters.getIsAblyConnectedStatus) {
         const ablyInstance = new Ably.Realtime({
           authUrl: "/api/createTokenRequest",
@@ -295,17 +294,21 @@ export default new Vuex.Store({
           vueContext.commit("setAblyRealtimeInstance", ablyInstance);
           vueContext.commit(
             "setAblyClientId",
-            this.state.ablyRealtimeInstance.auth.clientId
+            ids.clientId ?? this.state.ablyRealtimeInstance.auth.clientId
           );
-          if (sessionId) {
-            vueContext.commit("setSessionId", sessionId);
+          if (ids.sessionId) {
+            vueContext.commit("setSessionId", ids.sessionId);
           }
           vueContext.dispatch("attachToAblyChannels");
           vueContext.dispatch("getExistingAblyPresenceSet");
           vueContext.dispatch("subscribeToAblyPresence");
           vueContext.dispatch("enterClientInAblyPresenceSet");
         });
-        ablyInstance.connection.once("disconnected", () => {
+        ablyInstance.connection.on("connected", () => {
+          vueContext.commit("setAblyConnectionStatus", true);
+          vueContext.dispatch("getExistingAblyPresenceSet");
+        });
+        ablyInstance.connection.on("disconnected", () => {
           vueContext.commit("setAblyConnectionStatus", false);
         });
       }
@@ -363,7 +366,10 @@ export default new Vuex.Store({
       console.log("handleExistingParticipantLeft", participant);
       vueContext.commit("removeParticipantJoined", participant.clientId);
       if (this.state.participantsVotedDict[participant.clientId] !== undefined) {
-        vueContext.commit("removeParticipantVoted", { "clientId": participant.clientId, "cardNumber": this.state.participantsVotedDict[participant.clientId] });
+        vueContext.commit("removeParticipantVoted", {
+          clientId: participant.clientId,
+          cardNumber: this.state.participantsVotedDict[participant.clientId],
+        });
       }
     },
 
@@ -385,12 +391,18 @@ export default new Vuex.Store({
 
     handleVoteReceived(vueContext, msg) {
       console.log("handleVoteReceived", msg);
-      vueContext.commit("addParticipantVoted", { "clientId": msg.clientId, "cardNumber": msg.data.cardNumber} );
+      vueContext.commit("addParticipantVoted", {
+        clientId: msg.data.clientId,
+        cardNumber: msg.data.cardNumber,
+      });
     },
 
     handleUndoVoteReceived(vueContext, msg) {
       console.log("handleUndoVoteReceived", msg);
-      vueContext.commit("removeParticipantVoted", { "clientId": msg.clientId, "cardNumber": msg.data.cardNumber });
+      vueContext.commit("removeParticipantVoted", {
+        clientId: msg.data.clientId,
+        cardNumber: msg.data.cardNumber,
+      });
     },
 
     handleShowResultsReceived(vueContext, msg) {
@@ -443,7 +455,10 @@ export default new Vuex.Store({
 
     toggleShowResults(vueContext) {
       vueContext.commit("toggleShowResults");
-      vueContext.dispatch("publishShowResultsToAbly", this.getters.getShowResults);
+      vueContext.dispatch(
+        "publishShowResultsToAbly",
+        this.getters.getShowResults
+      );
     },
 
     publishShowResultsToAbly({ state }, showResults) {
@@ -454,30 +469,30 @@ export default new Vuex.Store({
 
     doVote(vueContext, cardNumber) {
       console.log("doVote", cardNumber);
-      vueContext.commit("selectCard", cardNumber);
-      vueContext.commit("addParticipantVoted", { "clientId": this.state.ablyClientId, "cardNumber": cardNumber });
-      vueContext.dispatch("publishVoteToAbly", cardNumber);
+      let clientVote = {
+        clientId: this.state.ablyClientId,
+        cardNumber: cardNumber,
+      };
+      vueContext.commit("addParticipantVoted", clientVote);
+      vueContext.dispatch("publishVoteToAbly", clientVote);
     },
 
-    publishVoteToAbly({ state }, cardNumber) {
-      console.log("publishVoteToAbly", cardNumber);
-      state.channelInstances.voting.publish("vote", {
-        id: state.ablyClientId,
-        cardNumber: cardNumber,
-      });
+    publishVoteToAbly({ state }, clientVote) {
+      console.log("publishVoteToAbly", clientVote);
+      state.channelInstances.voting.publish("vote", clientVote);
     },
 
     undoVote(vueContext, cardNumber) {
-      vueContext.commit("deselectCard", cardNumber);
-      vueContext.commit("removeParticipantVoted", { "clientId": this.state.ablyClientId, "cardNumber": cardNumber } );
-      vueContext.dispatch("publishUndoVoteToAbly", cardNumber);
+      let clientVote = {
+        clientId: this.state.ablyClientId,
+        cardNumber: cardNumber,
+      };
+      vueContext.commit("removeParticipantVoted",  clientVote);
+      vueContext.dispatch("publishUndoVoteToAbly", clientVote);
     },
 
-    publishUndoVoteToAbly({ state }, cardNumber) {
-      state.channelInstances.voting.publish("undo-vote", {
-        id: state.ablyClientId,
-        cardNumber: cardNumber,
-      });
+    publishUndoVoteToAbly({ state }, clientVote) {
+      state.channelInstances.voting.publish("undo-vote", clientVote);
     },
   },
 });
