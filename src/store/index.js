@@ -174,7 +174,6 @@ export default new Vuex.Store({
     getSessionId: (state) => state.sessionId,
     getSessionStarted: (state) =>
       state.sessionId !== null && state.sessionId !== undefined,
-    getVotingChannel: (state) => state.channelInstances.voting,
     getNrOfParticipantsJoined: (state) => state.participantsJoinedArr.length,
     getHaveParticipantsJoined: (state) => state.participantsJoinedArr.length > 1,
     getNrOfParticipantsVoted: (state) => state.nrOfParticipantsVoted,
@@ -182,10 +181,10 @@ export default new Vuex.Store({
     getCards: (state) => state.cards,
     getIsAnyCardSelected: (state) => state.isAnyCardSelected,
     getCardIndex: (state) => (cardNumber) => {
-      return state.cards.findIndex((card) => card.number === cardNumber);
+      return state.cards.findIndex(card => card.number === cardNumber);
     },
     getVoteCountForCard: (state) => (cardNumber) => {
-      return state.cards.filter((card) => card.number === cardNumber)[0].count.length;
+      return state.cards.filter(card => card.number === cardNumber)[0].count.length;
     },
   },
   mutations: {
@@ -233,7 +232,7 @@ export default new Vuex.Store({
       if (state.cards[index].count.includes(clientVote.clientId)) {
         state.cards[index].count.splice(
           state.cards[index].count.findIndex(
-            (id) => id === clientVote.clientId
+            id => id === clientVote.clientId
           ),
           1
         );
@@ -257,11 +256,17 @@ export default new Vuex.Store({
       state.showResults = showResults;
     },
     resetCards(state) {
-      state.cards.forEach((card) => {
+      state.cards.forEach(card => {
         card.count = [];
         card.isSelected = false;
       });
       state.isAnyCardSelected = false;
+    },
+    checkClientVotes(state) {
+      state.cards.forEach(card => {
+        card.count = [];
+        card.isSelected = false;
+      });
     },
     setNrOfParticipantVoted(state, nrOfParticipantsVoted) {
       state.nrOfParticipantsVoted = nrOfParticipantsVoted;
