@@ -205,9 +205,6 @@ export default new Vuex.Store({
     setAblyChannelInstances(state, { voting }) {
       state.channelInstances.voting = voting;
     },
-    setParticipantJoined(state, participantsJoined) {
-      state.participantsJoinedArr = participantsJoined;
-    },
     addParticipantJoined(state, clientId) {
       state.participantsJoinedArr.push(clientId);
     },
@@ -227,7 +224,9 @@ export default new Vuex.Store({
     removeParticipantVoted(state, clientId) {
       console.log("removeParticipantVoted", clientId);
       delete state.participantsVotedDict[clientId];
-      state.nrOfParticipantsVoted--;
+      if (state.nrOfParticipantsVoted > 0) {
+        state.nrOfParticipantsVoted--;
+      }
     },
     setNrOfParticipantsVoted(state, number) {
       state.nrOfParticipantsVoted = number;
@@ -252,7 +251,6 @@ export default new Vuex.Store({
       state.nrOfParticipantsVoted = nrOfParticipantsVoted;
     },
     selectCard(state, cardNumber) {
-      console.log("selectCard", cardNumber);
       let index = this.getters.getCardIndex(cardNumber);
       state.cards[index].isSelected = true;
       state.isAnyCardSelected = true;
@@ -268,7 +266,9 @@ export default new Vuex.Store({
     },
     decrementCardCount(state, cardNumber) {
       let index = this.getters.getCardIndex(cardNumber);
-      state.cards[index].count--;
+      if (state.cards[index].count > 0) {
+        state.cards[index].count--;
+      }
     },
   },
 
@@ -298,36 +298,6 @@ export default new Vuex.Store({
       }
     },
 
-    startSession(vueContext, routeSessionId) {
-      console.log("startSession - routeId", routeSessionId);
-      let sessionId;
-      if (routeSessionId == null) {
-        sessionId = generateName();
-      } else {
-        sessionId = routeSessionId;
-      }
-      vueContext.commit("setSessionId", sessionId);
-    },
-
-    resetVoting(vueContext) {
-      vueContext.dispatch("commonResetVoting");
-      vueContext.dispatch("publishResetVotingToAbly");
-    },
-
-    commonResetVoting(vueContext) {
-      let flush = new Audio("flush.mp3");
-      flush.play();
-      vueContext.commit("resetCards");
-      vueContext.commit("setShowResults", false);
-      vueContext.commit("setNrOfParticipantsVoted", 0);
-      vueContext.commit("setParticipantVotedDict", {});
-    },
-
-    closeAblyConnection() {
-      console.log("closeAblyConnection");
-      this.state.ablyRealtimeInstance.connection.close();
-    },
-
     attachToAblyChannels(vueContext) {
       const channelName = `${this.state.channelNames.voting}-${this.state.sessionId}`;
       console.log("channelName", channelName);
@@ -337,12 +307,16 @@ export default new Vuex.Store({
           params: { rewind: "2m" },
         }
       );
-
       vueContext.commit("setAblyChannelInstances", {
         voting: votingChannel,
       });
-
       vueContext.dispatch("subscribeToAblyVoting");
+    },
+
+    enterClientInAblyPresenceSet() {
+      this.state.channelInstances.voting.presence.enter({
+        id: this.state.ablyClientId,
+      });
     },
 
     getExistingAblyPresenceSet(vueContext) {
@@ -369,6 +343,20 @@ export default new Vuex.Store({
       });
     },
 
+    handleNewParticipantEntered(vueContext, participant) {
+      console.log("handleNewParticipantEntered", participant);
+      vueContext.commit("addParticipantJoined", participant.clientId);
+    },
+
+    handleExistingParticipantLeft(vueContext, participant) {
+      vueContext.commit("removeParticipantJoined", participant.clientId);
+      console.log("clientId+Vote", participant.clientId, this.state.participantsVotedDict[participant.clientId]);
+      if (this.state.participantsVotedDict[participant.clientId] !== undefined) {
+        vueContext.commit("decrementCardCount", this.state.participantsVotedDict[participant.clientId]);
+        vueContext.commit("removeParticipantVoted", participant.clientId);
+      }
+    },
+
     subscribeToAblyVoting(vueContext) {
       console.log("subscribeToAblyVoting");
       this.state.channelInstances.voting.subscribe("vote", (msg) => {
@@ -383,20 +371,6 @@ export default new Vuex.Store({
       this.state.channelInstances.voting.subscribe("reset-voting", (msg) => {
         vueContext.dispatch("handleResetVotesReceived", msg);
       });
-    },
-
-    handleNewParticipantEntered(vueContext, participant) {
-      console.log("handleNewParticipantEntered", participant);
-      vueContext.commit("addParticipantJoined", participant.clientId);
-    },
-
-    handleExistingParticipantLeft(vueContext, participant) {
-      vueContext.commit("removeParticipantJoined", participant.clientId);
-      console.log("clientId+Vote", participant.clientId, this.state.participantsVotedDict[participant.clientId]);
-      if (this.state.participantsVotedDict[participant.clientId] !== undefined) {
-        vueContext.commit("decrementCardCount", this.state.participantsVotedDict[participant.clientId]);
-        vueContext.commit("removeParticipantVoted", participant.clientId);
-      }
     },
 
     handleVoteReceived(vueContext, msg) {
@@ -425,15 +399,49 @@ export default new Vuex.Store({
       vueContext.dispatch("commonResetVoting");
     },
 
-    enterClientInAblyPresenceSet() {
-      this.state.channelInstances.voting.presence.enter({
-        id: this.state.ablyClientId,
-      });
+    startSession(vueContext, routeSessionId) {
+      console.log("startSession - routeId", routeSessionId);
+      let sessionId;
+      if (routeSessionId == null) {
+        sessionId = generateName();
+      } else {
+        sessionId = routeSessionId;
+      }
+      vueContext.commit("setSessionId", sessionId);
+    },
+
+    resetVoting(vueContext) {
+      vueContext.dispatch("commonResetVoting");
+      vueContext.dispatch("publishResetVotingToAbly");
+    },
+
+    publishResetVotingToAbly({ state }) {
+      state.channelInstances.voting.publish("reset-voting", {});
+    },
+
+    commonResetVoting(vueContext) {
+      let flush = new Audio("flush.mp3");
+      flush.play();
+      vueContext.commit("resetCards");
+      vueContext.commit("setShowResults", false);
+      vueContext.commit("setNrOfParticipantsVoted", 0);
+      vueContext.commit("setParticipantVotedDict", {});
+    },
+
+    closeAblyConnection() {
+      console.log("closeAblyConnection");
+      this.state.ablyRealtimeInstance.connection.close();
     },
 
     toggleShowResults(vueContext) {
       vueContext.commit("toggleShowResults");
       vueContext.dispatch("publishShowResultsToAbly", this.getters.getShowResults);
+    },
+
+    publishShowResultsToAbly({ state }, showResults) {
+      state.channelInstances.voting.publish("show-results", {
+        showResults: showResults,
+      });
     },
 
     doVote(vueContext, cardNumber) {
@@ -442,12 +450,6 @@ export default new Vuex.Store({
       vueContext.commit("incrementCardCount", cardNumber);
       vueContext.commit("addParticipantVoted", { "clientId": this.state.ablyClientId, "cardNumber": cardNumber });
       vueContext.dispatch("publishVoteToAbly", cardNumber);
-    },
-    undoVote(vueContext, cardNumber) {
-      vueContext.commit("deselectCard", cardNumber);
-      vueContext.commit("decrementCardCount", cardNumber);
-      vueContext.commit("removeParticipantVoted", this.state.ablyClientId);
-      vueContext.dispatch("publishUndoVoteToAbly", cardNumber);
     },
 
     publishVoteToAbly({ state }, cardNumber) {
@@ -458,21 +460,18 @@ export default new Vuex.Store({
       });
     },
 
+    undoVote(vueContext, cardNumber) {
+      vueContext.commit("deselectCard", cardNumber);
+      vueContext.commit("decrementCardCount", cardNumber);
+      vueContext.commit("removeParticipantVoted", this.state.ablyClientId);
+      vueContext.dispatch("publishUndoVoteToAbly", cardNumber);
+    },
+
     publishUndoVoteToAbly({ state }, cardNumber) {
       state.channelInstances.voting.publish("undo-vote", {
         id: state.ablyClientId,
         cardNumber: cardNumber,
       });
-    },
-
-    publishShowResultsToAbly({ state }, showResults) {
-      state.channelInstances.voting.publish("show-results", {
-        showResults: showResults,
-      });
-    },
-
-    publishResetVotingToAbly({ state }) {
-      state.channelInstances.voting.publish("reset-voting", {});
     },
   },
 });
