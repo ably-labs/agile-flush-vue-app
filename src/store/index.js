@@ -12,8 +12,6 @@ export default new Vuex.Store({
     ablyClientId: null,
     sessionId: null,
     participantsJoinedArr: [],
-    participantsVotedDict: {},
-    nrOfParticipantsVoted: 0,
     channelNames: {
       voting: "voting",
     },
@@ -166,9 +164,7 @@ export default new Vuex.Store({
     getSessionStarted: (state) =>
       state.sessionId !== null && state.sessionId !== undefined,
     getNrOfParticipantsJoined: (state) => state.participantsJoinedArr.length,
-    getHaveParticipantsJoined: (state) =>
-      state.participantsJoinedArr.length > 1,
-    getNrOfParticipantsVoted: (state) => state.nrOfParticipantsVoted,
+    getHaveParticipantsJoined: (state) => state.participantsJoinedArr.length > 1,
     getShowResults: (state) => state.showResults,
     getCards: (state) => state.cards,
     getCardIndex: (state) => (cardNumber) => {
@@ -191,6 +187,22 @@ export default new Vuex.Store({
         card => card.count.length > 0 && card.count.includes(state.ablyClientId)
       ).length;
       return cardCount > 0;
+    },
+    getSelectedCardForClient: (state) => (clientId) => {
+      let card = state.cards.filter(
+        card => card.count.length > 0 && card.count.includes(clientId)
+      );
+      if (card) {
+        return card.number;
+      }
+      return null;
+    },
+    getNrOfParticipantsVoted: (state) => {
+      let concatenatedCount = [];
+      state.cards.forEach(card => {
+        concatenatedCount.push(...card.count);
+      });
+      return concatenatedCount.length;
     }
   },
   mutations: {
@@ -228,8 +240,6 @@ export default new Vuex.Store({
       if (!state.cards[index].count.includes(clientVote.clientId)) {
         state.cards[index].count.push(clientVote.clientId);
       }
-      state.participantsVotedDict[clientVote.clientId] = clientVote.cardNumber;
-      state.nrOfParticipantsVoted++;
     },
 
     removeParticipantVoted(state, clientVote) {
@@ -238,22 +248,11 @@ export default new Vuex.Store({
       if (state.cards[index].count.includes(clientVote.clientId)) {
         state.cards[index].count.splice(
           state.cards[index].count.findIndex(
-            (id) => id === clientVote.clientId
+            id => id === clientVote.clientId
           ),
           1
         );
       }
-
-      delete state.participantsVotedDict[clientVote.clientId];
-      if (state.nrOfParticipantsVoted > 0) {
-        state.nrOfParticipantsVoted--;
-      }
-    },
-    setNrOfParticipantsVoted(state, number) {
-      state.nrOfParticipantsVoted = number;
-    },
-    setParticipantVotedDict(state, participantsVoted) {
-      state.participantsVotedDict = participantsVoted;
     },
     toggleShowResults(state) {
       state.showResults = !state.showResults;
@@ -262,23 +261,9 @@ export default new Vuex.Store({
       state.showResults = showResults;
     },
     resetCards(state) {
-      state.cards.forEach((card) => {
+      state.cards.forEach(card => {
         card.count = [];
       });
-      state.isAnyCardSelected = false;
-    },
-    setNrOfParticipantVoted(state, nrOfParticipantsVoted) {
-      state.nrOfParticipantsVoted = nrOfParticipantsVoted;
-    },
-    selectCard(state, cardNumber) {
-      let index = this.getters.getCardIndex(cardNumber);
-      state.cards[index].isSelected = true;
-      state.isAnyCardSelected = true;
-    },
-    deselectCard(state, cardNumber) {
-      let index = this.getters.getCardIndex(cardNumber);
-      state.cards[index].isSelected = false;
-      state.isAnyCardSelected = false;
     },
   },
 
@@ -365,10 +350,11 @@ export default new Vuex.Store({
     handleExistingParticipantLeft(vueContext, participant) {
       console.log("handleExistingParticipantLeft", participant);
       vueContext.commit("removeParticipantJoined", participant.clientId);
-      if (this.state.participantsVotedDict[participant.clientId] !== undefined) {
+      let cardNumber = this.getters.getSelectedCardForClient(participant.clientId);
+      if (cardNumber !== null) {
         vueContext.commit("removeParticipantVoted", {
           clientId: participant.clientId,
-          cardNumber: this.state.participantsVotedDict[participant.clientId],
+          cardNumber: cardNumber,
         });
       }
     },
@@ -444,8 +430,6 @@ export default new Vuex.Store({
       flush.play();
       vueContext.commit("resetCards");
       vueContext.commit("setShowResults", false);
-      vueContext.commit("setNrOfParticipantsVoted", 0);
-      vueContext.commit("setParticipantVotedDict", {});
     },
 
     closeAblyConnection() {
