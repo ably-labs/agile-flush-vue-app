@@ -1,0 +1,33 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "4 - Vue App",
+  "steps": [
+    {
+      "directory": "src",
+      "description": "The `src` folder contains the files for the Vue App.",
+      "title": "src"
+    },
+    {
+      "file": "src/main.js",
+      "description": "The `main.js` file is the entry point for the app that creates a new Vue instance. Two Vue plugins are used: [Vue Router](https://router.vuejs.org/) for the routing and [Vuex](https://vuex.vuejs.org/) for state management.",
+      "line": 12,
+      "selection": {
+        "start": {
+          "line": 8,
+          "character": 1
+        },
+        "end": {
+          "line": 13,
+          "character": 1
+        }
+      },
+      "title": "main.js"
+    },
+    {
+      "file": "src/App.vue",
+      "description": "The `App.vue` file is the root component of the application. It references `TheMainPage` component and Vuex getters and actions.",
+      "line": 3,
+      "title": "App.vue"
+    }
+  ]
+}
