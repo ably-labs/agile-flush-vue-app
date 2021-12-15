@@ -18,16 +18,23 @@ The project uses the following components:
 
 ## Running the app locally
 
+### Prerequisites
+
 Ensure you have the following dependencies installed:
 
 - [Node 16](https://nodejs.org/en/download/)
 - [Azure Static Web Apps CLI](https://github.com/Azure/static-web-apps-cli)
 - [Azure Functions Core Tools v4](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=v4)
 
-For more info developing Static Web Apps locally see the [official docs](https://docs.microsoft.com/en-us/azure/static-web-apps/local-development).
+For more info developing Static Web Apps locally see the [official Azure docs](https://docs.microsoft.com/en-us/azure/static-web-apps/local-development).
+
+### Installation steps
 
 1. Clone this repository to your local machine.
-1. [Sign up](https://ably.com/signup) or [log in](https://ably.com/login) to [ably.com](https://www.ably.com), [create a new app and copy the API key](https://faqs.ably.com/setting-up-and-managing-api-keys).
+
+    📝 **Tip** - If you intend you deploy your own version of the app, you're better off forking this repo.
+
+1. [Sign up](https://ably.com/signup) or [log in](https://ably.com/login) to ably.com, and [create a new app and copy the API key](https://faqs.ably.com/setting-up-and-managing-api-keys).
 1. Add a file named `local.settings.json` to the `api` folder and add the following content:
 
     ```json
@@ -42,7 +49,7 @@ For more info developing Static Web Apps locally see the [official docs](https:/
     ```
 
     - Replace `<YOUR_ABLY_APP_KEY>` with the key you copied in step 2.
-1. To install the dependencies, run this in the root of the repository:
+1. To install the dependencies for the Vue application, run this in the root of the repository:
 
     ```cmd
     npm install
@@ -55,6 +62,12 @@ For more info developing Static Web Apps locally see the [official docs](https:/
     ```
 
     The Vue app will be available at `http://localhost:8080`.
+
+1. To install the dependencies for the Azure Functions application, run this in the `api` folder of the repository:
+
+    ```cmd
+    npm install
+    ```
 
 1. To start the Azure Functions runtime, run this in the `api` folder of the repository:
 
@@ -74,9 +87,13 @@ For more info developing Static Web Apps locally see the [official docs](https:/
 
 ## Deploying the app to Azure
 
-// TODO
+Once you forked this repository, you can deploy it to Azure via:
 
+- [the Azure Portal](https://docs.microsoft.com/en-us/azure/static-web-apps/get-started-portal?tabs=vue) or
+- [the Azure CLI](https://docs.microsoft.com/en-us/azure/static-web-apps/get-started-cli?tabs=vue)
 
-## CodeTour
+In both cases you can skip the repository creation step since you can use your fork of this repository. 
 
-This repository has a CodeTour that guides your through the solution. You can either start the tour on GitHub or run it in VSCode using the [CodeTour extension](https://marketplace.visualstudio.com/items?itemName=vsls-contrib.codetour).
+## Code Tours
+
+This repository has code tours that guide you through the files and folders in this repository. You can either start the tours in VSCode (enabled by the [CodeTour extension](https://marketplace.visualstudio.com/items?itemName=vsls-contrib.codetour)) or you start them by visiting the [github.dev](https://github.dev/ably-labs/agile-flush-vue-app) version of this repository.
