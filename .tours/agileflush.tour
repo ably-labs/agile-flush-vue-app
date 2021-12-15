@@ -4,27 +4,33 @@
   "steps": [
     {
       "directory": ".github/workflows",
-      "description": "The `.github/workflows` folder contains the GitHub workflow to deploy the application to Azure Static Web Apps."
+      "description": "The `.github/workflows` folder contains the GitHub workflow to deploy the application to Azure Static Web Apps.",
+      "title": ".github/workflows"
     },
     {
       "directory": ".tours",
-      "description": "The `.tours` folder contains the CodeTour files you're now following."
+      "description": "The `.tours` folder contains the CodeTour files you're now following.",
+      "title": ".tours"
     },
     {
       "directory": ".vscode",
-      "description": "The `.vscode` folder contains files that VSCode uses to recommend extensions, apply settings and execute tasks that are relevant for this repository."
+      "description": "The `.vscode` folder contains files that VSCode uses to recommend extensions, apply settings and execute tasks that are relevant for this repository.",
+      "title": ".vscode"
     },
     {
       "directory": "api",
-      "description": "The `api` folder contains the Azure Function that requests an authentication token that the Vue app will use to communicate with Ably."
+      "description": "The `api` folder contains the Azure Function that requests an authentication token that the Vue app will use to communicate with Ably.",
+      "title": "api"
     },
     {
       "directory": "public",
-      "description": "The `public` folder contains the static files for the web application."
+      "description": "The `public` folder contains the static files for the web application.",
+      "title": "public"
     },
     {
       "directory": "src",
-      "description": "The `src` folder contains the files for the Vue application."
+      "description": "The `src` folder contains the files for the Vue application.",
+      "title": "src"
     }
   ]
 }

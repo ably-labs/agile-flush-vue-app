@@ -4,11 +4,13 @@
   "steps": [
     {
       "directory": "api",
-      "description": "The `api` folder contains the files for the Azure Functions App."
+      "description": "The `api` folder contains the files for the Azure Functions App.",
+      "title": "api"
     },
     {
       "directory": "api/createTokenRequest",
-      "description": "The `createTokenRequest` folder contains the function definition of the Node based Azure Function."
+      "description": "The `createTokenRequest` folder contains the function definition of the Node based Azure Function.",
+      "title": "createTokenRequest"
     },
     {
       "file": "api/createTokenRequest/function.json",
@@ -23,12 +25,14 @@
           "line": 10,
           "character": 8
         }
-      }
+      },
+      "title": "function.json"
     },
     {
       "file": "api/createTokenRequest/index.js",
       "description": "The function constructs a new Ably client and requires an API key (`ABLY_API_KEY`) that is set in configuration of the Azure Static Web App (or locally in the `local.settings.json`).",
-      "line": 5
+      "line": 5,
+      "title": "index.js - ably client"
     },
     {
       "file": "api/createTokenRequest/index.js",
@@ -43,7 +47,8 @@
           "line": 10,
           "character": 7
         }
-      }
+      },
+      "title": "index.js - create token"
     },
     {
       "file": "api/host.json",
@@ -58,7 +63,8 @@
           "line": 11,
           "character": 19
         }
-      }
+      },
+      "title": "host.json"
     },
     {
       "directory": "api",
