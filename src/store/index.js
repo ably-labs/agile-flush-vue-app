@@ -189,11 +189,11 @@ export default new Vuex.Store({
       return cardCount > 0;
     },
     getSelectedCardForClient: (state) => (clientId) => {
-      let card = state.cards.filter(
-        card => card.count.length > 0 && card.count.includes(clientId)
-      );
-      if (card) {
-        return card.number;
+      let selectedByClient = state.cards.filter(card =>
+        card.count.length > 0 &&
+        card.count.includes(clientId))[0];
+      if (selectedByClient !== undefined) {
+        return selectedByClient.number;
       }
       return null;
     },
