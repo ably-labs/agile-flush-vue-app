@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/codetour-schema",
-  "title": "2 - Folder structure",
+  "title": "2 - Folder Structure",
   "steps": [
     {
       "directory": ".github/workflows",

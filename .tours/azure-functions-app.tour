@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/codetour-schema",
-  "title": "Azure Functions App",
+  "title": "3 - Azure Functions App",
   "steps": [
     {
       "directory": "api",
@@ -31,8 +31,39 @@
       "line": 5
     },
     {
+      "file": "api/createTokenRequest/index.js",
+      "description": "An authentication token is requested from the Ably client and that token is returned in the HTTP response.",
+      "line": 10,
+      "selection": {
+        "start": {
+          "line": 6,
+          "character": 5
+        },
+        "end": {
+          "line": 10,
+          "character": 7
+        }
+      }
+    },
+    {
+      "file": "api/host.json",
+      "description": "The `hosts.json` file contains global settings regarding logging and references which binding extensions are used. More info on the `hosts.json` file is found in the [official docs](https://docs.microsoft.com/en-us/azure/azure-functions/functions-host-json).",
+      "line": 15,
+      "selection": {
+        "start": {
+          "line": 11,
+          "character": 4
+        },
+        "end": {
+          "line": 11,
+          "character": 19
+        }
+      }
+    },
+    {
       "directory": "api",
-      "description": "If  you want to run the application locally you need to add a file named `local.settings.json` in the `api` folder. This file is ignored by git because it may contain secrets like API keys.\n\nThe content should look like this:\n\n```json\n{\n    \"IsEncrypted\": false,\n    \"Values\": {\n        \"AzureWebJobsStorage\": \"\",\n        \"FUNCTIONS_WORKER_RUNTIME\": \"node\",\n        \"ABLY_API_KEY\": \"<YOUR_ABLY_KEY>\"\n    }\n}\n```\n\nWhere `<YOUR_ABLY_KEY>` should be replaced with [an actual API key](https://faqs.ably.com/setting-up-and-managing-api-keys)."
+      "description": "If  you want to run the application locally you need to add a file named `local.settings.json` in the `api` folder. This file is ignored by git because it may contain secrets like API keys.\n\nThe content should look like this:\n\n```json\n{\n    \"IsEncrypted\": false,\n    \"Values\": {\n        \"AzureWebJobsStorage\": \"\",\n        \"FUNCTIONS_WORKER_RUNTIME\": \"node\",\n        \"ABLY_API_KEY\": \"<YOUR_ABLY_KEY>\"\n    }\n}\n```\n\nWhere `<YOUR_ABLY_KEY>` should be replaced with [an actual API key](https://faqs.ably.com/setting-up-and-managing-api-keys).",
+      "title": "local.settings.json"
     }
   ]
 }

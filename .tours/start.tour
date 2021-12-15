@@ -4,7 +4,7 @@
   "steps": [
     {
       "title": "Introduction",
-      "description": "This CodeTour will guide you through this repository and explain how the Agile Flush application is structured."
+      "description": "This CodeTour will guide you through this repository and explain how the Agile Flush application is structured.\n\n* [Folder Structure]\n* [Azure Functions App]\n* [Vue App]"
     }
   ],
   "isPrimary": true
