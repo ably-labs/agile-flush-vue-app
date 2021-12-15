@@ -30,7 +30,13 @@
     },
     {
       "file": "api/createTokenRequest/index.js",
-      "description": "The function constructs a new Ably client and requires an API key (`ABLY_API_KEY`) that is set in configuration of the Azure Static Web App (or locally in the `local.settings.json`).",
+      "description": "The `index.js` file contains the function that will be executed, and contains references to any Node modules that it requires.",
+      "line": 1,
+      "title": "index.js"
+    },
+    {
+      "file": "api/createTokenRequest/index.js",
+      "description": "The function constructs a new Ably client and requires an API key (`ABLY_API_KEY`) that is set in the configuration of the Azure Static Web App (or locally in the `local.settings.json`).",
       "line": 5,
       "title": "index.js - ably client"
     },
@@ -52,7 +58,7 @@
     },
     {
       "file": "api/host.json",
-      "description": "The `hosts.json` file contains global settings regarding logging and references which binding extensions are used. More info on the `hosts.json` file is found in the [official docs](https://docs.microsoft.com/en-us/azure/azure-functions/functions-host-json).",
+      "description": "The `hosts.json` file contains global settings regarding logging and references which binding extensions are used. More info on the `hosts.json` file is found in the [official Azure docs](https://docs.microsoft.com/en-us/azure/azure-functions/functions-host-json).",
       "line": 15,
       "selection": {
         "start": {
