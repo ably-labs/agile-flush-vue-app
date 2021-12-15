@@ -37,7 +37,7 @@ export default {
       this.instantiateAblyConnection( { "sessionId": sessionId, "clientId": this.routeClientId });
     }
   },
-  beforeUnmount() {
+  destroyed() {
     this.closeAblyConnection();
   }
 };
