@@ -29,7 +29,6 @@ export default {
     ]),
   },
   created() {
-    console.log("created", this.routeSessionId, this.routeClientId);
     if (this.routeSessionId !== undefined) {
       this.startSession(this.routeSessionId);
       let sessionId = this.getSessionId;

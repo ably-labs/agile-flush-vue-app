@@ -39,7 +39,6 @@ export default {
       } else if (this.getIsAnyCardSelectedByClient && this.getIsCardSelectedByClient(this.card.number)) {
         this.undoVote(number);
       }
-      console.log(this.routeSessionId, this.routeClientId)
       if (this.routeSessionId === undefined || this.routeClientId === undefined) {
         this.$router.replace({ path: `/`, query: { sessionId: this.getSessionId, clientId: this.getClientId } });
       }

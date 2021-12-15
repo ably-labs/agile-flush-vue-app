@@ -32,7 +32,7 @@
           v-for="card in getCards"
           :key="card.number"
           :card="card"
-          :isAnyCardSelected="isAnyCardSelected"
+          :isAnyCardSelected="getIsAnyCardSelectedByClient"
         />
       </div>
     </div>
@@ -52,12 +52,6 @@ export default {
     CardItem,
     JoinDetails,
     TheFooter,
-  },
-  data() {
-    return {
-      isAnyCardSelected: false,
-      selectedCard: null,
-    };
   },
   computed: {
     ...mapGetters([
@@ -79,7 +73,6 @@ export default {
     ]),
     start() {
       this.startSession();
-      console.log("created sessionId", this.getSessionId);
       this.instantiateAblyConnection( { "sessionId": this.getSessionId });
       document.title = `Agile Flush - ${this.getSessionId}`;
       this.$router.replace({ path: `/`, query: { sessionId: this.getSessionId } });
