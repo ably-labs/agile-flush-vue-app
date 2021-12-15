@@ -1,5 +1,30 @@
 {
   "$schema": "https://aka.ms/codetour-schema",
-  "title": "AgileFlush",
-  "steps": []
+  "title": "2 - Folder structure",
+  "steps": [
+    {
+      "directory": ".github/workflows",
+      "description": "The `.github/workflows` folder contains the GitHub workflow to deploy the application to Azure Static Web Apps."
+    },
+    {
+      "directory": ".tours",
+      "description": "The `.tours` folder contains the CodeTour files you're now following."
+    },
+    {
+      "directory": ".vscode",
+      "description": "The `.vscode` folder contains files that VSCode uses to recommend extensions, apply settings and execute tasks that are relevant for this repository."
+    },
+    {
+      "directory": "api",
+      "description": "The `api` folder contains the Azure Function that requests an authentication token that the Vue app will use to communicate with Ably."
+    },
+    {
+      "directory": "public",
+      "description": "The `public` folder contains the static files for the web application."
+    },
+    {
+      "directory": "src",
+      "description": "The `src` folder contains the files for the Vue application."
+    }
+  ]
 }

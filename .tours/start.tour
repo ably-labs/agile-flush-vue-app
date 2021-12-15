@@ -1,0 +1,11 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "1 - Start",
+  "steps": [
+    {
+      "title": "Introduction",
+      "description": "This CodeTour will guide you through this repository and explain how the Agile Flush application is structured."
+    }
+  ],
+  "isPrimary": true
+}
