@@ -133,7 +133,7 @@
       "file": "src/router/index.js",
       "description": "The `router/index.js` script contains this default Vue Router configuration.",
       "line": 1,
-      "title": "router/index.js"
+      "title": "Vue Router"
     },
     {
       "file": "src/store/index.js",
@@ -149,19 +149,19 @@
           "character": 26
         }
       },
-      "title": "store/index.js"
+      "title": "Vuex store"
     },
     {
       "file": "src/store/index.js",
       "description": "The `state` tree contains all the data fields we want to update and use in the components.",
       "line": 9,
-      "title": "store/index.js - state"
+      "title": "store - state"
     },
     {
       "file": "src/store/index.js",
       "description": "The `cards` property is one of the most important ones. It contains definitions for all of the voting cards (numbers and ASCII visuals) as well as a `count` array that is used to store the clientIds of the participants who selected that card.\n\nIf you want more cards, like a coffee card, or an infinity card, you can add these to this `cards` array. Just make sure the `number` field is unique.",
       "line": 22,
-      "title": "store/index.js - cards"
+      "title": "store - cards state"
     },
     {
       "file": "src/store/index.js",
@@ -177,19 +177,19 @@
           "character": 31
         }
       },
-      "title": "store/index.js - getters"
+      "title": "store - getters"
     },
     {
       "file": "src/store/index.js",
       "description": "The `mutations` property contains functions to alter the state properties, for example: `addParticipantVoted()`. Mutation functions are called from `actions` functions.",
       "line": 209,
-      "title": "store/index.js - mutations"
+      "title": "store - mutations"
     },
     {
       "file": "src/store/index.js",
       "description": "The `actions` property contains functions that combines `getters` and `mutations` functions.",
       "line": 270,
-      "title": "store/index.js - actions"
+      "title": "store - actions"
     },
     {
       "file": "src/store/index.js",
@@ -205,7 +205,57 @@
           "character": 30
         }
       },
-      "title": "store/index.js - instantiateAblyConnection"
+      "title": "store - instantiateAblyConnection action"
+    },
+    {
+      "file": "src/store/index.js",
+      "description": "The `subscribeToAblyVoting()` action ensures that this client is listening to these named messages in the voting channel:\n\n* *vote*\n* *undo-vote*\n* *show-results*\n* *reset-voting*\n\nWhenever these messages are received a corresponding `actions` function is called to handle the message.",
+      "line": 362,
+      "title": "store - subscribeToAblyVoting action"
+    },
+    {
+      "file": "src/store/index.js",
+      "description": "The `startSession()` action either uses the supplied `sessionId` from the route or generates a new `sessionId` via `generateName()`. The `sessionId` is then stored in state via the `setSessionId` mutation.",
+      "line": 408,
+      "title": "store - startSession"
+    },
+    {
+      "file": "src/store/index.js",
+      "description": "The `doVote` action is triggered when the participant selects a card. It adds the clientId to the `card.count` via the `addParticipantVoted` mutation and calls the `publishVoteToAbly` action to send the vote to the other connected clients.",
+      "line": 454,
+      "title": "store - doVote action"
+    },
+    {
+      "file": "src/store/index.js",
+      "description": "The `resetVoting` action calls the `commonResetVoting` action to clear out the clientIds from the card.count state and publishes a `reset-voting` message via the `publishResetVotingToAbly` action to trigger the reset at the other connected clients.",
+      "line": 419,
+      "selection": {
+        "start": {
+          "line": 421,
+          "character": 28
+        },
+        "end": {
+          "line": 421,
+          "character": 52
+        }
+      },
+      "title": "store - resetVoting action"
+    },
+    {
+      "file": "src/store/index.js",
+      "description": "The `toggleShowResults` action is triggered by the Show/Hide Results button and toggles the visibility of the votes. The `toggleShowResults` mutation updates the state and the `publishShowResultsToAbly` action publishes a `show-results` message that is used by the connected clients to show/hide their local voting results.",
+      "line": 440,
+      "selection": {
+        "start": {
+          "line": 443,
+          "character": 10
+        },
+        "end": {
+          "line": 443,
+          "character": 34
+        }
+      },
+      "title": "store - toggleShowResults action"
     }
   ]
 }
