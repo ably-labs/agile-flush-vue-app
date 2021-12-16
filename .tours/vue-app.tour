@@ -94,6 +94,118 @@
         }
       },
       "title": "TheMainPage - reset"
+    },
+    {
+      "file": "src/components/JoinDetails.vue",
+      "description": "The `JoinDetails` component is used to show how many participants have joined and how many have voted.",
+      "line": 2,
+      "title": "JoinDetails.vue"
+    },
+    {
+      "file": "src/components/CardItem.vue",
+      "description": "The `CardItem` component is used to render the voting cards.",
+      "line": 1,
+      "title": "CardItem.vue"
+    },
+    {
+      "file": "src/components/CardItem.vue",
+      "description": "The `selectCard()` function is called when a participant clicks on a card. Since only one card can be selected at any time a check is made before a card is selected. If no card is selected, the `doVote()` function is called which sends a *vote* message to all connected clients. If the selected card is selected again, the `undoVote()` function is called, which deselects the card and sends an *undo-vote* mnessage to all connected clients.",
+      "line": 60,
+      "selection": {
+        "start": {
+          "line": 42,
+          "character": 5
+        },
+        "end": {
+          "line": 60,
+          "character": 5
+        }
+      },
+      "title": "CardItem - selectCard"
+    },
+    {
+      "file": "src/components/TheFooter.vue",
+      "description": "The `TheFooter` component renders this small part of static html with contact details.",
+      "line": 7,
+      "title": "TheFooter.vue"
+    },
+    {
+      "file": "src/router/index.js",
+      "description": "The `router/index.js` script contains this default Vue Router configuration.",
+      "line": 1,
+      "title": "router/index.js"
+    },
+    {
+      "file": "src/store/index.js",
+      "description": "The `Store/index.js` script contains the [Vuex](https://vuex.vuejs.org/) configuration for state management.",
+      "line": 1,
+      "selection": {
+        "start": {
+          "line": 362,
+          "character": 5
+        },
+        "end": {
+          "line": 362,
+          "character": 26
+        }
+      },
+      "title": "store/index.js"
+    },
+    {
+      "file": "src/store/index.js",
+      "description": "The `state` tree contains all the data fields we want to update and use in the components.",
+      "line": 9,
+      "title": "store/index.js - state"
+    },
+    {
+      "file": "src/store/index.js",
+      "description": "The `cards` property is one of the most important ones. It contains definitions for all of the voting cards (numbers and ASCII visuals) as well as a `count` array that is used to store the clientIds of the participants who selected that card.\n\nIf you want more cards, like a coffee card, or an infinity card, you can add these to this `cards` array. Just make sure the `number` field is unique.",
+      "line": 22,
+      "title": "store/index.js - cards"
+    },
+    {
+      "file": "src/store/index.js",
+      "description": "The `getters` property contain getter functions for retrieve/query the state, for example: `getVoteCountForCard()`. Getter functions are called from components, or from `mutations`or `actions` inside this file.",
+      "line": 160,
+      "selection": {
+        "start": {
+          "line": 247,
+          "character": 24
+        },
+        "end": {
+          "line": 247,
+          "character": 31
+        }
+      },
+      "title": "store/index.js - getters"
+    },
+    {
+      "file": "src/store/index.js",
+      "description": "The `mutations` property contains functions to alter the state properties, for example: `addParticipantVoted()`. Mutation functions are called from `actions` functions.",
+      "line": 209,
+      "title": "store/index.js - mutations"
+    },
+    {
+      "file": "src/store/index.js",
+      "description": "The `actions` property contains functions that combines `getters` and `mutations` functions.",
+      "line": 270,
+      "title": "store/index.js - actions"
+    },
+    {
+      "file": "src/store/index.js",
+      "description": "The `instantiateAblyConnection` action is responsible for:\n\n* Creating a new Ably.Realtime instance.\n* Updating the connection status.\n* Attaching this client to the Ably channel.\n* Retrieving the presence information (other connected clients) of the channel.\n* Subscribing to presence and voting information.",
+      "line": 271,
+      "selection": {
+        "start": {
+          "line": 271,
+          "character": 5
+        },
+        "end": {
+          "line": 271,
+          "character": 30
+        }
+      },
+      "title": "store/index.js - instantiateAblyConnection"
     }
   ]
 }
