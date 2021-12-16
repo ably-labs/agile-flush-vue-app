@@ -52,7 +52,7 @@ button.visual {
   margin: 2px;
   padding: 2px;
   white-space: pre;
-  border-radius: 10px;
+  border-radius: 15px;
   background-color: #f5f5f6;
   border: none;
 }
