@@ -89,7 +89,6 @@ export default {
 .status {
   font-size: smaller;
   font-weight: 400;
-  padding-left: 10px;
 }
 
 .success::after {
