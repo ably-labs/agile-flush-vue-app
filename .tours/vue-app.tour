@@ -28,6 +28,72 @@
       "description": "The `App.vue` file is the root component of the application. It references `TheMainPage` component and Vuex getters and actions.",
       "line": 3,
       "title": "App.vue"
+    },
+    {
+      "file": "src/App.vue",
+      "description": "The `created` lifecycle event is used to detect if a sessionId is present in the route. This would be the case when the first participant starts a session and shares the link with other participants. When the sessionId is present, a new Ably connection will be created for this participant.",
+      "line": 37,
+      "selection": {
+        "start": {
+          "line": 39,
+          "character": 3
+        },
+        "end": {
+          "line": 41,
+          "character": 4
+        }
+      },
+      "title": "App.vue - created"
+    },
+    {
+      "file": "src/App.vue",
+      "description": "Once the Vue app is destroyed, the connection with Ably is terminated.",
+      "line": 41,
+      "title": "App.vue - destroyed"
+    },
+    {
+      "file": "src/components/TheMainPage.vue",
+      "description": "`TheMainPage` contains the most of structure of the application.",
+      "line": 1,
+      "title": "TheMainPage.vue"
+    },
+    {
+      "file": "src/components/TheMainPage.vue",
+      "description": "This component references three smaller components; `CardItem`, `JoinDetails`, and `TheFooter` as well as several Vuex getters and actions.",
+      "line": 48,
+      "selection": {
+        "start": {
+          "line": 44,
+          "character": 1
+        },
+        "end": {
+          "line": 48,
+          "character": 47
+        }
+      },
+      "title": "TheMainPage.vue - imports"
+    },
+    {
+      "file": "src/components/TheMainPage.vue",
+      "description": "The `start()` method is called when the first participant clicks the *Start Session* button. A new connection to Ably is made, and the client is subscribed to the channel. To allow the other participants to join this session, the sessionId is added to the url, and the url is copied to the clipboard so it can be shared easily.",
+      "line": 80,
+      "title": "TheMainPage.vue - start"
+    },
+    {
+      "file": "src/components/TheMainPage.vue",
+      "description": "The `reset()` method is called when the participant clicks the *Flush votes* button. This action resets all the votes and is propagated to all the connected clients.",
+      "line": 83,
+      "selection": {
+        "start": {
+          "line": 81,
+          "character": 5
+        },
+        "end": {
+          "line": 83,
+          "character": 7
+        }
+      },
+      "title": "TheMainPage - reset"
     }
   ]
 }
