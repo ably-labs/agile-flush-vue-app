@@ -1,6 +1,6 @@
 <template>
-  <div :id="card.number" @click="selectCard(card.number)">
-    <p :class="{ selected: this.getIsCardSelectedByClient(card.number) }">{{ card.visual }}</p>
+  <div :id="card.number">
+    <button @click="selectCard(card.number)" class="visual" :class="{ selected: this.getIsCardSelectedByClient(card.number) }">{{ card.visual }}</button>
     <p class="votecount" v-if="getShowResults">{{ this.getVoteCountForCard(card.number) }}</p>
   </div>
 </template>
@@ -48,21 +48,26 @@ export default {
 </script>
 
 <style scope>
-.card > p {
-  margin: 0px;
+button.visual {
+  margin: 2px;
+  padding: 2px;
   white-space: pre;
   border-radius: 10px;
+  background-color: #f5f5f6;
+  border: none;
 }
 
 .votecount {
+  font-weight: bold;
   text-align: center;
+  margin: 2px;
 }
 
 .card:hover {
   font-weight: bold;
 }
 
-.selected {
+button.selected {
   font-weight: bold;
   color: white;
   background-color: #e40000;
