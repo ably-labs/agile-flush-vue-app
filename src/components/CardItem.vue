@@ -1,7 +1,15 @@
 <template>
   <div :id="card.number">
-    <button @click="selectCard(card.number)" class="visual" :class="{ selected: this.getIsCardSelectedByClient(card.number) }">{{ card.visual }}</button>
-    <p class="votecount" v-if="getShowResults">{{ this.getVoteCountForCard(card.number) }}</p>
+    <button
+      @click="selectCard(card.number)"
+      class="visual"
+      :class="{ selected: this.getIsCardSelectedByClient(card.number) }"
+    >
+      {{ card.visual }}
+    </button>
+    <p class="votecount" v-if="getShowResults">
+      {{ this.getVoteCountForCard(card.number) }}
+    </p>
   </div>
 </template>
 
@@ -11,7 +19,7 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   name: "CardItem",
   props: {
-    card: Object
+    card: Object,
   },
   computed: {
     ...mapGetters([
@@ -20,7 +28,8 @@ export default {
       "getClientId",
       "getIsCardSelectedByClient",
       "getIsAnyCardSelectedByClient",
-      "getVoteCountForCard"]),
+      "getVoteCountForCard",
+    ]),
     routeSessionId() {
       return this.$route.query.sessionId;
     },
@@ -29,21 +38,27 @@ export default {
     },
   },
   methods: {
-    ...mapActions([
-      "doVote",
-      "undoVote"
-    ]),
+    ...mapActions(["doVote", "undoVote"]),
     selectCard(number) {
       if (this.getIsAnyCardSelectedByClient === false) {
         this.doVote(number);
-      } else if (this.getIsAnyCardSelectedByClient && this.getIsCardSelectedByClient(this.card.number)) {
+      } else if (
+        this.getIsAnyCardSelectedByClient &&
+        this.getIsCardSelectedByClient(this.card.number)
+      ) {
         this.undoVote(number);
       }
-      if (this.routeSessionId === undefined || this.routeClientId === undefined) {
-        this.$router.replace({ path: `/`, query: { sessionId: this.getSessionId, clientId: this.getClientId } });
+      if (
+        this.routeSessionId === undefined ||
+        this.routeClientId === undefined
+      ) {
+        this.$router.replace({
+          path: `/`,
+          query: { sessionId: this.getSessionId, clientId: this.getClientId },
+        });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -57,19 +72,20 @@ button.visual {
   border: none;
 }
 
+button.selected {
+  font-weight: bold;
+  color: white;
+  background-color: #e40000;
+}
+
+button.visual:hover {
+  font-weight: bold;
+}
+
 .votecount {
   font-weight: bold;
   text-align: center;
   margin: 2px;
 }
 
-.card:hover {
-  font-weight: bold;
-}
-
-button.selected {
-  font-weight: bold;
-  color: white;
-  background-color: #e40000;
-}
 </style>
