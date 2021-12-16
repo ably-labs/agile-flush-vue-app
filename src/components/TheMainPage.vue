@@ -13,7 +13,7 @@
       {{ getSessionStarted ? "Start new session" : "Start session" }}
     </button>
     <div v-if="getSessionStarted">
-      <h2 :class="{ success: getIsAblyConnectedStatus, failed: !getIsAblyConnectedStatus}">Session: {{ getSessionId }}</h2>
+      <h2>Session: {{ getSessionId }} <span class="status" :class="{ success: getIsAblyConnectedStatus, failed: !getIsAblyConnectedStatus}"/></h2>
       <JoinDetails />
       <p>
         Once everyone has submitted their vote, click the
@@ -85,20 +85,19 @@ export default {
 };
 </script>
 
-<style>
-body {
-  font-family: "Courier New", monospace;
-  background-color: white;
+<style scope>
+.status {
+  font-size: smaller;
+  font-weight: 400;
+  padding-left: 10px;
 }
 
 .success::after {
   content: '\2705';
-  padding-left: 10px;
 }
 
 .failed::after {
   content: '\274C';
-  padding-left: 10px;
 }
 
 .card-list {

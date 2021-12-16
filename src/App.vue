@@ -41,3 +41,10 @@ export default {
   }
 };
 </script>
+<style>
+body {
+  font-family: "Courier New", monospace;
+  color: black;
+  background-color: white;
+}
+</style>
