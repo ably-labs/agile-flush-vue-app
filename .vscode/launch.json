@@ -6,7 +6,7 @@
             "name": "Vue Edge",
             "request": "launch",
             "type": "pwa-msedge",
-            "url": "http://localhost:8080",
+            "url": "http://localhost:5000",
             "webRoot": "${workspaceFolder}/src",
             "breakOnLoad": true,
             "preLaunchTask": "npm run serve",

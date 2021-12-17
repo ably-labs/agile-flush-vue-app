@@ -5,15 +5,29 @@
       The Nr 1 and Nr 2 place for online planning poker!
     </p>
     <ol>
-      <li :class="{ strike: getSessionStarted }">Start a new session.</li>
-      <li :class="{ strike: getHaveParticipantsJoined }">Invite your team members by copying &amp; sharing the url.</li>
-      <li :class="{ strike: getIsAnyCardSelectedByClient }">Start voting for the user stories! 🚀</li>
+      <li :class="{ strike: getSessionStarted }">
+        Start a new session.
+      </li>
+      <li :class="{ strike: getHaveParticipantsJoined }">
+        Invite your team members by copying &amp; sharing the url.
+      </li>
+      <li :class="{ strike: getIsAnyCardSelectedByClient }">
+        Start voting for the user stories! 🚀
+      </li>
     </ol>
-    <button @click="start" v-if="!getSessionStarted">
+    <button
+      v-if="!getSessionStarted"
+      @click="start"
+    >
       {{ getSessionStarted ? "Start new session" : "Start session" }}
     </button>
     <div v-if="getSessionStarted">
-      <h2>Session: {{ getSessionId }} <span class="status" :class="{ success: getIsAblyConnectedStatus, failed: !getIsAblyConnectedStatus}"/></h2>
+      <h2>
+        Session: {{ getSessionId }} <span
+          class="status"
+          :class="{ success: getIsAblyConnectedStatus, failed: !getIsAblyConnectedStatus}"
+        />
+      </h2>
       <JoinDetails />
       <p>
         Once everyone has submitted their vote, click the
@@ -23,20 +37,25 @@
       <button @click="toggleShowResults">
         {{ getShowResults ? "Hide votes" : "Show votes" }}
       </button>
-      <button @click="reset" :disabled="!getShowResults">Flush votes</button>
+      <button
+        :disabled="!getShowResults"
+        @click="reset"
+      >
+        Flush votes
+      </button>
       <h3>Cards</h3>
       <p>Click on a card to vote. To undo your vote, click the card again.</p>
       <div class="card-list">
         <CardItem
-          class="card"
           v-for="card in getCards"
           :key="card.number"
+          class="card"
           :card="card"
-          :isAnyCardSelected="getIsAnyCardSelectedByClient"
+          :is-any-card-selected="getIsAnyCardSelectedByClient"
         />
       </div>
     </div>
-   <TheFooter />
+    <TheFooter />
   </div>
 </template>
 
@@ -71,11 +90,11 @@ export default {
       "startSession",
       "resetVoting"
     ]),
-    start() {
+    async start() {
       this.startSession();
       this.instantiateAblyConnection( { "sessionId": this.getSessionId });
       document.title = `Agile Flush - ${this.getSessionId}`;
-      this.$router.replace({ path: `/`, query: { sessionId: this.getSessionId } });
+      await this.$router.replace({ path: '/', query: { sessionId: this.getSessionId } });
       navigator.clipboard.writeText(window.location.href);
     },
     reset() {

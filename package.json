@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "init": "npm clean-install && cd api && npm clean-install",
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src"
   },
   "repository": {
     "type": "git",
@@ -19,20 +20,14 @@
   },
   "dependencies": {
     "ably": "^1.2.15",
-    "core-js": "^3.6.4",
-    "vue": "^2.6.11",
-    "vue-router": "^3.5.3",
-    "vuex": "^3.6.2"
+    "vue": "^3.2.26",
+    "vue-router": "^4.0.12",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.15",
-    "@vue/cli-plugin-eslint": "^4.5.15",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-service": "~4.5.15",
-    "babel-eslint": "^10.0.3",
-    "eslint": "^7.0.0",
     "eslint-plugin-vue": "^8.1.1",
-    "vue-template-compiler": "^2.6.14"
+    "@vitejs/plugin-vue": "^2.0.1",
+    "vite": "^2.7.3"
   },
   "eslintConfig": {
     "root": true,
@@ -43,9 +38,6 @@
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
     "rules": {}
   },
   "browserslist": [

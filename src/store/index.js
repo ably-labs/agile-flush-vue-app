@@ -1,11 +1,8 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from "vuex";
 import * as Ably from "ably";
 import { generateName } from "../util/nameGenerator.js";
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
+export const store = createStore({
   state: {
     ablyRealtimeInstance: null,
     isAblyConnected: false,

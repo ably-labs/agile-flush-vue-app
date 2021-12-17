@@ -21,14 +21,7 @@ export default {
       return this.$route.query.clientId;
     },
   },
-  methods: {
-    ...mapActions([
-      "instantiateAblyConnection",
-      "closeAblyConnection",
-      "startSession",
-    ]),
-  },
-  created() {
+  beforeMount() {
     if (this.routeSessionId !== undefined) {
       this.startSession(this.routeSessionId);
       let sessionId = this.getSessionId;
@@ -36,9 +29,16 @@ export default {
       this.instantiateAblyConnection( { "sessionId": sessionId, "clientId": this.routeClientId });
     }
   },
-  destroyed() {
+  unmounted() {
     this.closeAblyConnection();
-  }
+  },
+  methods: {
+    ...mapActions([
+      "instantiateAblyConnection",
+      "closeAblyConnection",
+      "startSession",
+    ]),
+  },
 };
 </script>
 <style>

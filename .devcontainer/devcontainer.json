@@ -10,9 +10,9 @@
       "VARIANT": "16"
     }
   },
-  "forwardPorts": [8080, 7071],
+  "forwardPorts": [5000, 7071],
   "portsAttributes": {
-    "8080": {
+    "5000": {
       "label": "Website",
       "onAutoForward": "ignore"
     },

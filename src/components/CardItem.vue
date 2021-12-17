@@ -1,14 +1,17 @@
 <template>
   <div :id="card.number">
     <button
-      @click="selectCard(card.number)"
       class="visual"
-      :class="{ selected: this.getIsCardSelectedByClient(card.number) }"
+      :class="{ selected: getIsCardSelectedByClient(card.number) }"
+      @click="selectCard(card.number)"
     >
       {{ card.visual }}
     </button>
-    <p class="votecount" v-if="getShowResults">
-      {{ this.getVoteCountForCard(card.number) }}
+    <p
+      v-if="getShowResults"
+      class="votecount"
+    >
+      {{ getVoteCountForCard(card.number) }}
     </p>
   </div>
 </template>
@@ -19,7 +22,10 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   name: "CardItem",
   props: {
-    card: Object,
+    card: {
+      type: Object,
+      default: null
+    }
   },
   computed: {
     ...mapGetters([
@@ -39,7 +45,7 @@ export default {
   },
   methods: {
     ...mapActions(["doVote", "undoVote"]),
-    selectCard(number) {
+    async selectCard(number) {
       if (this.getIsAnyCardSelectedByClient === false) {
         this.doVote(number);
       } else if (
@@ -52,8 +58,8 @@ export default {
         this.routeSessionId === undefined ||
         this.routeClientId === undefined
       ) {
-        this.$router.replace({
-          path: `/`,
+        await this.$router.replace({
+          path: '/',
           query: { sessionId: this.getSessionId, clientId: this.getClientId },
         });
       }

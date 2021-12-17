@@ -79,10 +79,10 @@ For more info developing Static Web Apps locally see the [official Azure docs](h
 1. To run the Vue application, run this in the root of the repository:
 
     ```cmd
-    npm run serve
+    npm run dev
     ```
 
-    The Vue app will be available at `http://localhost:5000`.
+    The Vue app will be available at `http://localhost:3000`.
 
 1. To start the Azure Functions runtime, run this in the `api` folder of the repository:
 
@@ -95,7 +95,7 @@ For more info developing Static Web Apps locally see the [official Azure docs](h
 1. To start the Static Web App emulator, run this in the root of the repository:
 
     ```cmd
-    swa start http://localhost:5000 --api-location http://localhost:7071
+    swa start http://localhost:3000 --api-location http://localhost:7071
     ```
 
 1. Now open the link that is output by the `swa` command (`http://localhost:4280`).
