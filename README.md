@@ -16,9 +16,16 @@ The project uses the following components:
 - [Ably](https://ably.com/) as the realtime communications platform.
 - [Azure Static Web Apps](https://docs.microsoft.com/en-us/azure/static-web-apps/overview) to host the application.
 
-## Running the app locally
+## Building & Running the app yourself
 
-### Prerequisites
+There are two options:
+
+1. [Install & run locally](#1-install--run-locally)
+1. [Run using GitHub Codespaces](#2-run-using-github-codespaces)
+
+### 1. Install & run locally
+
+#### Prerequisites
 
 Ensure you have the following dependencies installed:
 
@@ -28,13 +35,32 @@ Ensure you have the following dependencies installed:
 
 For more info developing Static Web Apps locally see the [official Azure docs](https://docs.microsoft.com/en-us/azure/static-web-apps/local-development).
 
-### Installation steps
+#### Installation steps
 
 1. Clone this repository to your local machine.
 
     📝 **Tip** - If you intend you deploy your own version of the app, you're better off forking this repo.
 
+1. To install the dependencies for this application, run this in the root of the repository:
+
+    ```cmd
+    npm run init
+    ```
+
+1. Now continue with [Running the application](#running-the-application).
+
+### 2. Run using GitHub Codespaces
+
+1. If you're new to Codespaces, please have a look at the [quickstart in the GitHub docs](https://docs.github.com/en/codespaces/getting-started/quickstart).
+
+1. Create a new Codespace via the *<> Code* dropdown button and select the tab *Codespaces -> New codespace*.
+
+1. Now continue with [Running the application](#running-the-application).
+
+### Running the application
+
 1. [Sign up](https://ably.com/signup) or [log in](https://ably.com/login) to ably.com, and [create a new app and copy the API key](https://faqs.ably.com/setting-up-and-managing-api-keys).
+
 1. Add a file named `local.settings.json` to the `api` folder and add the following content:
 
     ```json
@@ -48,13 +74,7 @@ For more info developing Static Web Apps locally see the [official Azure docs](h
     }
     ```
 
-    - Replace `<YOUR_ABLY_APP_KEY>` with the key you copied in step 2.
-
-1. To install the dependencies for this application, run this in the root of the repository:
-
-    ```cmd
-    npm run init
-    ```
+    - Replace `<YOUR_ABLY_APP_KEY>` with the key you copied in the previous step.
 
 1. To run the Vue application, run this in the root of the repository:
 
@@ -62,7 +82,7 @@ For more info developing Static Web Apps locally see the [official Azure docs](h
     npm run serve
     ```
 
-    The Vue app will be available at `http://localhost:8080`.
+    The Vue app will be available at `http://localhost:5000`.
 
 1. To start the Azure Functions runtime, run this in the `api` folder of the repository:
 
@@ -75,7 +95,7 @@ For more info developing Static Web Apps locally see the [official Azure docs](h
 1. To start the Static Web App emulator, run this in the root of the repository:
 
     ```cmd
-    swa start http://localhost:8080 --api-location http://localhost:7071
+    swa start http://localhost:5000 --api-location http://localhost:7071
     ```
 
 1. Now open the link that is output by the `swa` command (`http://localhost:4280`).
