@@ -12,7 +12,7 @@ The live version can be used here: [Agile Flush on Azure](https://gentle-moss-08
 
 The project uses the following components:
 
-- [Vue](https://vuejs.org/) as the front-end framework.
+- [Vue 3](https://v3.vuejs.org/) as the front-end framework.
 - [Ably](https://ably.com/) as the realtime communications platform.
 - [Azure Static Web Apps](https://docs.microsoft.com/en-us/azure/static-web-apps/overview) to host the application.
 

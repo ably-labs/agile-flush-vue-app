@@ -13,12 +13,12 @@
       "line": 12,
       "selection": {
         "start": {
-          "line": 8,
+          "line": 6,
           "character": 1
         },
         "end": {
-          "line": 13,
-          "character": 1
+          "line": 9,
+          "character": 47
         }
       },
       "title": "main.js"
@@ -31,8 +31,8 @@
     },
     {
       "file": "src/App.vue",
-      "description": "The `created` lifecycle event is used to detect if a sessionId is present in the route. This would be the case when the first participant starts a session and shares the link with other participants. When the sessionId is present, a new Ably connection will be created for this participant.",
-      "line": 37,
+      "description": "The `beforeMount` lifecycle event is used to detect if a sessionId is present in the route. This would be the case when the first participant starts a session and shares the link with other participants. When the sessionId is present, a new Ably connection will be created for this participant.",
+      "line": 24,
       "selection": {
         "start": {
           "line": 39,
@@ -47,8 +47,8 @@
     },
     {
       "file": "src/App.vue",
-      "description": "Once the Vue app is destroyed, the connection with Ably is terminated.",
-      "line": 41,
+      "description": "Once the Vue app is unmounted, the connection with Ably is terminated.",
+      "line": 32,
       "title": "App.vue - destroyed"
     },
     {
@@ -131,13 +131,13 @@
     },
     {
       "file": "src/router/index.js",
-      "description": "The `router/index.js` script contains this default Vue Router configuration.",
+      "description": "The `router/index.js` script contains [Vue Router](https://next.router.vuejs.org/) configuration.",
       "line": 1,
       "title": "Vue Router"
     },
     {
       "file": "src/store/index.js",
-      "description": "The `Store/index.js` script contains the [Vuex](https://vuex.vuejs.org/) configuration for state management.",
+      "description": "The `store/index.js` script contains the [Vuex](https://next.vuex.vuejs.org/) configuration for state management.",
       "line": 1,
       "selection": {
         "start": {
@@ -154,19 +154,19 @@
     {
       "file": "src/store/index.js",
       "description": "The `state` tree contains all the data fields we want to update and use in the components.",
-      "line": 9,
+      "line": 6,
       "title": "store - state"
     },
     {
       "file": "src/store/index.js",
       "description": "The `cards` property is one of the most important ones. It contains definitions for all of the voting cards (numbers and ASCII visuals) as well as a `count` array that is used to store the clientIds of the participants who selected that card.\n\nIf you want more cards, like a coffee card, or an infinity card, you can add these to this `cards` array. Just make sure the `number` field is unique.",
-      "line": 22,
+      "line": 19,
       "title": "store - cards state"
     },
     {
       "file": "src/store/index.js",
       "description": "The `getters` property contain getter functions for retrieve/query the state, for example: `getVoteCountForCard()`. Getter functions are called from components, or from `mutations`or `actions` inside this file.",
-      "line": 160,
+      "line": 157,
       "selection": {
         "start": {
           "line": 247,
@@ -182,19 +182,19 @@
     {
       "file": "src/store/index.js",
       "description": "The `mutations` property contains functions to alter the state properties, for example: `addParticipantVoted()`. Mutation functions are called from `actions` functions.",
-      "line": 209,
+      "line": 205,
       "title": "store - mutations"
     },
     {
       "file": "src/store/index.js",
       "description": "The `actions` property contains functions that combines `getters` and `mutations` functions.",
-      "line": 270,
+      "line": 267,
       "title": "store - actions"
     },
     {
       "file": "src/store/index.js",
       "description": "The `instantiateAblyConnection` action is responsible for:\n\n* Creating a new Ably.Realtime instance.\n* Updating the connection status.\n* Attaching this client to the Ably channel.\n* Retrieving the presence information (other connected clients) of the channel.\n* Subscribing to presence and voting information.",
-      "line": 271,
+      "line": 268,
       "selection": {
         "start": {
           "line": 271,
@@ -210,7 +210,7 @@
     {
       "file": "src/store/index.js",
       "description": "The `subscribeToAblyVoting()` action ensures that this client is listening to these named messages in the voting channel:\n\n* *vote*\n* *undo-vote*\n* *show-results*\n* *reset-voting*\n\nWhenever these messages are received a corresponding `actions` function is called to handle the message.",
-      "line": 362,
+      "line": 359,
       "title": "store - subscribeToAblyVoting action"
     },
     {
@@ -222,13 +222,13 @@
     {
       "file": "src/store/index.js",
       "description": "The `doVote` action is triggered when the participant selects a card. It adds the clientId to the `card.count` via the `addParticipantVoted` mutation and calls the `publishVoteToAbly` action to send the vote to the other connected clients.",
-      "line": 454,
+      "line": 451,
       "title": "store - doVote action"
     },
     {
       "file": "src/store/index.js",
       "description": "The `resetVoting` action calls the `commonResetVoting` action to clear out the clientIds from the card.count state and publishes a `reset-voting` message via the `publishResetVotingToAbly` action to trigger the reset at the other connected clients.",
-      "line": 419,
+      "line": 416,
       "selection": {
         "start": {
           "line": 421,
@@ -244,7 +244,7 @@
     {
       "file": "src/store/index.js",
       "description": "The `toggleShowResults` action is triggered by the Show/Hide Results button and toggles the visibility of the votes. The `toggleShowResults` mutation updates the state and the `publishShowResultsToAbly` action publishes a `show-results` message that is used by the connected clients to show/hide their local voting results.",
-      "line": 440,
+      "line": 437,
       "selection": {
         "start": {
           "line": 443,
