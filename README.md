@@ -6,7 +6,7 @@ This project is an example of how an online collaboration tool can be built that
 
 // TODO Diagram
 
-The live version can be used here: [TODO]().
+The live version can be used here: [Agile Flush on Azure](https://gentle-moss-08d9e3303.azurestaticapps.net).
 
 ## The tech stack
 
@@ -49,10 +49,11 @@ For more info developing Static Web Apps locally see the [official Azure docs](h
     ```
 
     - Replace `<YOUR_ABLY_APP_KEY>` with the key you copied in step 2.
-1. To install the dependencies for the Vue application, run this in the root of the repository:
+
+1. To install the dependencies for this application, run this in the root of the repository:
 
     ```cmd
-    npm install
+    npm run init
     ```
 
 1. To run the Vue application, run this in the root of the repository:
@@ -62,12 +63,6 @@ For more info developing Static Web Apps locally see the [official Azure docs](h
     ```
 
     The Vue app will be available at `http://localhost:8080`.
-
-1. To install the dependencies for the Azure Functions application, run this in the `api` folder of the repository:
-
-    ```cmd
-    npm install
-    ```
 
 1. To start the Azure Functions runtime, run this in the `api` folder of the repository:
 
