@@ -5,3 +5,4 @@ FROM mcr.microsoft.com/vscode/devcontainers/javascript-node:${VARIANT}
 
 RUN su node -c "npm install -g npm"
 RUN su node -c "npm install -g azure-functions-core-tools@4"
+RUN su node -c "npm install -g @azure/static-web-apps-cli"
