@@ -3,12 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "init": "npm clean-install && cd api && npm clean-install",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ably-labs/agile-flush-vue-app"
+  },
+  "author": "Marc Duiker",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ably-labs/agile-flush-vue-app/issues"
+  },
   "dependencies": {
-    "ably": "^1.2.2",
+    "ably": "^1.2.15",
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
     "vue-router": "^3.5.3",
