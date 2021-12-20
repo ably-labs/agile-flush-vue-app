@@ -4,11 +4,38 @@ The Nr 1 and Nr 2 place for online planning poker!
 
 This project is an example of how an online collaboration tool can be built that depends on realtime data synchronization between clients.
 
-// TODO Diagram
+This is the flow diagram how users can interact with the application.
+
+```mermaid
+flowchart TD
+    step1[Host visits website]-->step2
+    step2[Start session]-->step3
+    step3[Send URL to team members]-->voting
+    step4[Team member joins]-->voting
+    subgraph voting [Planning Session]
+        step5[Select card]-->step5 & step6 & step7
+        step6[Show/hide votes*]-->step7
+        step7{Votes visible?}--Yes-->step8
+        step8[Resets votes*]-->step5
+    end
+```
+
+The `*` mark the actions that will be synchronized across all team members.
 
 The live version can be used here: [Agile Flush on Azure](https://gentle-moss-08d9e3303.azurestaticapps.net).
 
 ## The tech stack
+
+```mermaid
+flowchart LR
+    subgraph ably [Ably]
+        step2[Ably app]
+    end
+    subgraph azure [Azure Static Web Apps]
+        step1[Vue3 application]
+    end
+    step1 <--channel--> step2
+```
 
 The project uses the following components:
 
