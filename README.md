@@ -2,6 +2,8 @@
 
 The Nr 1 and Nr 2 place for online planning poker!
 
+![AgileFlush Screenshot](agileflush_screenshot.png)
+
 This project is an example of how an online collaboration tool can be built that depends on realtime data synchronization between clients.
 
 This is the flow diagram how users can interact with the application.
