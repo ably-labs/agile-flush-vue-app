@@ -36,13 +36,14 @@ flowchart LR
     end
     step1 <--channel--> step2
 ```
+
 The project uses the following components:
 
 - [Vue 3](https://v3.vuejs.org/) as the front-end framework.
 - [Ably](https://ably.com/) as the realtime communications platform.
 - [Azure Static Web Apps](https://docs.microsoft.com/en-us/azure/static-web-apps/overview) to host the application.
 
-## Building & Running the app yourself
+## Building & running the app yourself
 
 There are two options:
 
