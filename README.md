@@ -6,19 +6,7 @@ This project is an example of how an online collaboration tool can be built that
 
 This is the flow diagram how users can interact with the application.
 
-```mermaid
-flowchart TD
-    step1[Host visits website]-->step2
-    step2[Start session]-->step3
-    step3[Send URL to team members]-->voting
-    step4[Team member joins]-->voting
-    subgraph voting [Planning Session]
-        step5[Select card]-->step5 & step6 & step7
-        step6[Show/hide votes*]-->step7
-        step7{Votes visible?}--Yes-->step8
-        step8[Resets votes*]-->step5
-    end
-```
+![Functionality diagram](/diagrams/functionality.svg)
 
 The `*` mark the actions that will be synchronized across all team members.
 
@@ -26,22 +14,13 @@ The live version can be used here: [Agile Flush on Azure](https://gentle-moss-08
 
 ## The tech stack
 
-```mermaid
-flowchart LR
-    subgraph ably [Ably]
-        step2[Ably app]
-    end
-    subgraph azure [Azure Static Web Apps]
-        step1[Vue3 application]
-    end
-    step1 <--channel--> step2
-```
+![Component diagram](/diagrams/components.svg)
 
 The project uses the following components:
 
 - [Vue 3](https://v3.vuejs.org/) as the front-end framework.
 - [Ably](https://ably.com/) as the realtime communications platform.
-- [Azure Static Web Apps](https://docs.microsoft.com/en-us/azure/static-web-apps/overview) to host the application.
+- [Azure Static Web Apps](https://docs.microsoft.com/azure/static-web-apps/overview) to host the application.
 
 ## Building & running the app yourself
 
@@ -58,9 +37,9 @@ Ensure you have the following dependencies installed:
 
 - [Node 16](https://nodejs.org/en/download/)
 - [Azure Static Web Apps CLI](https://github.com/Azure/static-web-apps-cli)
-- [Azure Functions Core Tools v4](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=v4)
+- [Azure Functions Core Tools v4](https://docs.microsoft.com/azure/azure-functions/functions-run-local?tabs=v4)
 
-For more info developing Static Web Apps locally see the [official Azure docs](https://docs.microsoft.com/en-us/azure/static-web-apps/local-development).
+For more info developing Static Web Apps locally see the [official Azure docs](https://docs.microsoft.com/azure/static-web-apps/local-development).
 
 #### Installation steps
 
@@ -139,4 +118,3 @@ In both cases you can skip the repository creation step since you can use your f
 ## Code Tours
 
 This repository has code tours that guide you through the files and folders in this repository. You can either start the tours in VSCode (enabled by the [CodeTour extension](https://marketplace.visualstudio.com/items?itemName=vsls-contrib.codetour)) or you start them by visiting the [github.dev](https://github.dev/ably-labs/agile-flush-vue-app) version of this repository.
-
