@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import * as Ably from "ably";
-import { generateName } from "../util/nameGenerator.js";
+import { generateSessionId } from "../util/sessionIdGenerator.js";
 
 export const store = createStore({
   state: {
@@ -406,7 +406,7 @@ export const store = createStore({
       console.log("startSession - routeId", routeSessionId);
       let sessionId;
       if (routeSessionId == null) {
-        sessionId = generateName();
+        sessionId = generateSessionId();
       } else {
         sessionId = routeSessionId;
       }

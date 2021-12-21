@@ -1,4 +1,4 @@
-export function generateName() {
+export function generateSessionId() {
   const names = [];
   const randomAdjective1 = randomFrom(adjectives);
   const randomAdjective2 = randomFrom(adjectives);
