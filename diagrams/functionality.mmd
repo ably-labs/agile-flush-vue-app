@@ -2,10 +2,10 @@ flowchart TD
     step1[Host visits website]-->step2
     step2[Start session]-->step3
     step3[Send URL to team members]-->voting
-    step4[Team member joins]-->voting
+    step4[Team member visits URL]-->voting
     subgraph voting [Planning Session]
         step5[Select card]-->step5 & step6 & step7
         step6[Show/hide votes*]-->step7
         step7{Votes visible?}--Yes-->step8
-        step8[Resets votes*]-->step5
+        step8[Reset votes*]-->step5
     end

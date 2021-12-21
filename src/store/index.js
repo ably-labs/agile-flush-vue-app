@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import * as Ably from "ably";
-import { generateName } from "../util/nameGenerator.js";
+import { generateSessionId } from "../util/sessionIdGenerator.js";
 
 export const store = createStore({
   state: {
@@ -368,7 +368,7 @@ export const store = createStore({
         vueContext.dispatch("handleShowResultsReceived", msg);
       });
       this.state.channelInstances.voting.subscribe("reset-voting", (msg) => {
-        vueContext.dispatch("handleResetVotesReceived", msg);
+        vueContext.dispatch("handleResetVotingReceived", msg);
       });
     },
 
@@ -397,8 +397,8 @@ export const store = createStore({
       }
     },
 
-    handleResetVotesReceived(vueContext, msg) {
-      console.log("handleResetVotesReceived", msg);
+    handleResetVotingReceived(vueContext, msg) {
+      console.log("handleResetVotingReceived", msg);
       vueContext.dispatch("commonResetVoting");
     },
 
@@ -406,7 +406,7 @@ export const store = createStore({
       console.log("startSession - routeId", routeSessionId);
       let sessionId;
       if (routeSessionId == null) {
-        sessionId = generateName();
+        sessionId = generateSessionId();
       } else {
         sessionId = routeSessionId;
       }

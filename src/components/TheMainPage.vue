@@ -39,7 +39,7 @@
       </button>
       <button
         :disabled="!getShowResults"
-        @click="reset"
+        @click="resetVoting"
       >
         Flush votes
       </button>
@@ -96,10 +96,7 @@ export default {
       document.title = `Agile Flush - ${this.getSessionId}`;
       await this.$router.replace({ path: '/', query: { sessionId: this.getSessionId } });
       navigator.clipboard.writeText(window.location.href);
-    },
-    reset() {
-      this.resetVoting();
-    },
+    }
   },
 };
 </script>

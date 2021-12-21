@@ -1,0 +1,14 @@
+sequenceDiagram
+    Client->>Vuex: resetVoting()
+    activate Client
+    activate Vuex
+    Vuex->>Vuex: commonResetVoting()
+    Vuex->>Ably: publish(reset-voting)
+    activate Ably
+    Ably->>Other Clients: broadcast: reset-voting
+    deactivate Ably
+    Client->>Vuex: getVoteCountForCard(cardNumber)
+    Vuex-->>Client: count
+    Client->>Vuex: getNrOfParticipantsVoted()
+    Vuex-->>Client: count
+    deactivate Vuex
