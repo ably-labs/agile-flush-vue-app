@@ -1,0 +1,9 @@
+sequenceDiagram
+    Ably->>Vuex: broadcast: participant entered
+    activate Vuex
+    Vuex->>Vuex: handleNewParticipantEntered(participant)
+    Vuex->>Vuex: addParticipantJoined(clientId)
+    Client->>Vuex: getNrOfParticipantsJoined()
+    Vuex-->>Client: count
+    
+    deactivate Vuex

@@ -1,0 +1,36 @@
+sequenceDiagram
+    alt client is host
+        Client->>Vuex: startSession
+        activate Client
+        activate Vuex
+        Vuex->>Vuex: generateSessionId
+        
+        Vuex-->>Client: sessionId
+    else client is team member
+        Client->>Vuex: startSession(sessionId)
+    end
+    Vuex->>Vuex: instantiateAblyConnection(sessionId)
+    Vuex->>Azure Function: createTokenRequest
+    activate Azure Function
+    Azure Function-->>Vuex: token
+    deactivate Azure Function
+    Vuex->>Ably: new RealtimeInstance(token)
+    activate Ably
+    Ably-->>Vuex: instance
+    Vuex->>Vuex: setAblyClientId
+    Vuex->>Ably: attachToAblyChannels(channelName)
+    Ably-->>Vuex: channel
+    Vuex->>Ably: subscribeToAblyVoting()
+    Vuex->>Ably: getExistingAblyPresenceSet()
+    Ably-->>Vuex: participants
+    loop for each participant
+        Vuex->>Vuex: addParticipantJoined
+    end
+    Vuex->>Ably: subscribeToAblyPresence()
+    Vuex->>Ably: enterClientInAblyPresenceSet()
+    Client->>Vuex: getNrOfParticipantsJoined()
+    Vuex-->>Client: count
+    deactivate Vuex
+    Ably->>Other Clients: broadcast: participant entered
+    deactivate Ably
+    deactivate Client

@@ -1,0 +1,8 @@
+sequenceDiagram
+    Ably->>Vuex: broadcast: show-results
+    activate Vuex
+    Vuex->>Vuex: handleShowResultsReceived(bool)
+    Vuex->>Vuex: setShowResults(bool)
+    Client->>Vuex: getShowResults()
+    Vuex-->>Client: bool   
+    deactivate Vuex

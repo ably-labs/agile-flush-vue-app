@@ -1,0 +1,16 @@
+sequenceDiagram
+    Client->>Vuex: toggleShowResults()
+    activate Client
+    activate Vuex
+    Vuex->>Vuex: toggleShowResults()
+    Vuex->>Ably: publish(show-results)
+    activate Ably
+    Ably->>Other Clients: broadcast: show-results
+    deactivate Ably
+    Client->>Vuex: getShowResults()
+    Vuex-->>Client: bool
+    deactivate Vuex
+    
+    
+    
+    
