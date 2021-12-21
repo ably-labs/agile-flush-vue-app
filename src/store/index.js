@@ -368,7 +368,7 @@ export const store = createStore({
         vueContext.dispatch("handleShowResultsReceived", msg);
       });
       this.state.channelInstances.voting.subscribe("reset-voting", (msg) => {
-        vueContext.dispatch("handleResetVotesReceived", msg);
+        vueContext.dispatch("handleResetVotingReceived", msg);
       });
     },
 
@@ -397,8 +397,8 @@ export const store = createStore({
       }
     },
 
-    handleResetVotesReceived(vueContext, msg) {
-      console.log("handleResetVotesReceived", msg);
+    handleResetVotingReceived(vueContext, msg) {
+      console.log("handleResetVotingReceived", msg);
       vueContext.dispatch("commonResetVoting");
     },
 
