@@ -7,5 +7,5 @@ module.exports = async function (context) {
     context.res = { 
         headers: { "content-type": "application/json" },
         body: JSON.stringify(tokenRequestData) 
-    };    
+    };
 };
