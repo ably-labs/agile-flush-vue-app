@@ -4,7 +4,7 @@ flowchart TD
     step3[Send URL to team members]-->voting
     step4[Team member visits URL]-->voting
     subgraph voting [Planning Session]
-        step5[Select card]-->step5 & step6 & step7
+        step5[Select card]-->step5 &  step7
         step6[Show/hide votes*]-->step7
         step7{Votes visible?}--Yes-->step8
         step8[Reset votes*]-->step5
