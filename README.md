@@ -21,8 +21,9 @@ The live version can be used here: [Agile Flush on Azure](https://gentle-moss-08
 The project uses the following components:
 
 - [Vue 3](https://v3.vuejs.org/) as the front-end framework.
+- [NodeJS Azure Function](https://docs.microsoft.com/azure/developer/javascript/how-to/develop-serverless-apps) to do the authentication with Ably.
 - [Ably](https://ably.com/) as the realtime communications platform.
-- [Azure Static Web Apps](https://docs.microsoft.com/azure/static-web-apps/overview) to host the application.
+- [Azure Static Web Apps](https://docs.microsoft.com/azure/static-web-apps/overview) to host the Vue application and NodeJS function.
 
 ## Building & running the app yourself
 
