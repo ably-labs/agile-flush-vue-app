@@ -10,8 +10,12 @@ sequenceDiagram
         Client->>Vuex: startSession(sessionId)
     end
     Vuex->>Vuex: instantiateAblyConnection(sessionId)
-    Vuex->>Azure Function: createTokenRequest
+    Vuex->>Azure Function: createTokenRequest()
     activate Azure Function
+    Azure Function->>Ably: createTokenRequest()
+    activate Ably
+    Ably-->>Azure Function: token
+    deactivate Ably
     Azure Function-->>Vuex: token
     deactivate Azure Function
     Vuex->>Ably: new RealtimeInstance(token)
