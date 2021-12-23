@@ -12,7 +12,7 @@
         Invite your team members by copying &amp; sharing the url.
       </li>
       <li :class="{ strike: getIsAnyCardSelectedByClient }">
-        Start voting for the user stories! 🚀
+        Start voting for the user stories!
       </li>
     </ol>
     <button
