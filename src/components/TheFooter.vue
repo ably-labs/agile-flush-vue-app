@@ -9,6 +9,10 @@
       href="https://www.ably.com"
       target="_blank"
     >ably.com</a> 🚀.
+    Look at the source on <a
+      href="https://github.com/ably-labs/agile-flush-vue-app"
+      target="_blank"
+    >GitHub</a> 👩‍💻.
   </p>
 </template>
 
