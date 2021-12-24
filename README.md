@@ -113,10 +113,10 @@ For more info developing Static Web Apps locally see the [official Azure docs](h
 
 Once you forked this repository, you can deploy it to Azure via:
 
-- [the Azure Portal](https://docs.microsoft.com/en-us/azure/static-web-apps/get-started-portal?tabs=vue) or
-- [the Azure CLI](https://docs.microsoft.com/en-us/azure/static-web-apps/get-started-cli?tabs=vue)
+- [the Azure Portal](https://docs.microsoft.com/azure/static-web-apps/get-started-portal?tabs=vue) or
+- [the Azure CLI](https://docs.microsoft.com/azure/static-web-apps/get-started-cli?tabs=vue)
 
-In both cases you can skip the repository creation step since you can use your fork of this repository. 
+In both cases you can skip the repository creation step since you can use your fork of this repository.
 
 ## Code Tours
 
