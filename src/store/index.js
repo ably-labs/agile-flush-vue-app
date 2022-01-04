@@ -271,7 +271,7 @@ export const store = createStore({
           authUrl: "/api/createTokenRequest",
           echoMessages: false,
         });
-        ablyInstance.connection.once("connected", () => {
+        ablyInstance.connection.on("connected", () => {
           vueContext.commit("setAblyConnectionStatus", true);
           vueContext.commit("setAblyRealtimeInstance", ablyInstance);
           vueContext.commit(
@@ -281,14 +281,12 @@ export const store = createStore({
           if (ids.sessionId) {
             vueContext.commit("setSessionId", ids.sessionId);
           }
-          vueContext.dispatch("attachToAblyChannels");
-          vueContext.dispatch("getExistingAblyPresenceSet");
-          vueContext.dispatch("subscribeToAblyPresence");
-          vueContext.dispatch("enterClientInAblyPresenceSet");
-        });
-        ablyInstance.connection.on("connected", () => {
-          vueContext.commit("setAblyConnectionStatus", true);
-          vueContext.dispatch("getExistingAblyPresenceSet");
+          vueContext.dispatch("attachToAblyChannels").then(() => {
+            vueContext.dispatch("enterClientInAblyPresenceSet");
+            vueContext.dispatch("getExistingAblyPresenceSet").then(()=> {
+              vueContext.dispatch("subscribeToAblyPresence");
+            });
+          });
         });
         ablyInstance.connection.on("disconnected", () => {
           vueContext.commit("setAblyConnectionStatus", false);
@@ -296,10 +294,10 @@ export const store = createStore({
       }
     },
 
-    attachToAblyChannels(vueContext) {
+    async attachToAblyChannels(vueContext) {
       const channelName = `${this.state.channelNames.voting}-${this.state.sessionId}`;
       console.log("channelName", channelName);
-      const votingChannel = this.state.ablyRealtimeInstance.channels.get(
+      const votingChannel = await this.state.ablyRealtimeInstance.channels.get(
         channelName,
         {
           params: { rewind: "2m" },
@@ -317,8 +315,8 @@ export const store = createStore({
       });
     },
 
-    getExistingAblyPresenceSet(vueContext) {
-      this.state.channelInstances.voting.presence.get((err, participants) => {
+    async getExistingAblyPresenceSet(vueContext) {
+      await this.state.channelInstances.voting.presence.get((err, participants) => {
         if (!err) {
           console.log("getExistingAblyPresenceSet", participants);
           for (let i = 0; i < participants.length; i++) {
