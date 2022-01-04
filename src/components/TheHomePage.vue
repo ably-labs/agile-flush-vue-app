@@ -85,7 +85,6 @@ export default {
    methods: {
     ...mapActions([
       "instantiateAblyConnection",
-      "closeAblyConnection",
       "toggleShowResults",
       "startSession",
       "resetVoting"
