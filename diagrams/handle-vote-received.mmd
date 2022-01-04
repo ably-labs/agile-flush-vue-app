@@ -5,6 +5,6 @@ sequenceDiagram
     Vuex->>Vuex: addParticipantVoted(vote)
     Client->>Vuex: getVoteCountForCard(cardNumber)
     Vuex-->>Client: count
-    Client->>Vuex: getNrOfParticipantsVoted()
+    Client->>Vuex: numberOfParticipantsVoted()
     Vuex-->>Client: count
     deactivate Vuex

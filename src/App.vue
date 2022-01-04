@@ -1,16 +1,16 @@
 <template>
-  <TheHomePage />
+  <HomePage />
 </template>
 
 <script>
-import TheHomePage from "./components/TheHomePage.vue";
+import HomePage from "./components/HomePage.vue";
 
 import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "App",
   components: {
-    TheHomePage,
+    HomePage,
   },
   computed: {
     ...mapGetters(["getSessionId"]),

@@ -1,6 +1,6 @@
 # ♥♣🚽 Agile Flush 🚽♠♦
 
-The Nr 1 and Nr 2 place for online planning poker!
+The No. 1 and No. 2 place for online planning poker!
 
 ![AgileFlush Screenshot](agileflush_screenshot.png)
 
@@ -85,29 +85,15 @@ For more info developing Static Web Apps locally see the [official Azure docs](h
 
     - Replace `<YOUR_ABLY_APP_KEY>` with the key you copied in the previous step.
 
-1. To run the Vue application, run this in the root of the repository:
+1. To run everything (Vue application, Azure Function, and Static Web Apps emulator), run this in the root of the repository:
 
     ```cmd
-    npm run dev
+    npm run all
     ```
 
-    The Vue app will be available at `http://localhost:3000`.
+    This command starts the Vue app at `http://localhost:3000`, the Azure Functions app at `http://localhost:7071`, and Static Web Apps at `http://localhost:4280`. If these ports are already in use, please change them in the package.json file.
 
-1. To start the Azure Functions runtime, run this in the `api` folder of the repository:
-
-    ```cmd
-    func start
-    ```
-
-    The Azure Functions app will be available at `http://localhost:7071`.
-
-1. To start the Static Web App emulator, run this in the root of the repository:
-
-    ```cmd
-    swa start http://localhost:3000 --api-location http://localhost:7071
-    ```
-
-1. Now open the link that is output by the `swa` command (`http://localhost:4280`).
+1. Now you can use the application using the endpoint provided by the Static Web Apps emulator: `http://localhost:4280`.
 
 ## Deploying the app to Azure
 

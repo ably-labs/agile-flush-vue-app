@@ -2,7 +2,7 @@
   <div>
     <h1><span class="red">♥</span>♣🚽 Agile Flush 🚽♠<span class="red">♦</span></h1>
     <p>
-      The Nr 1 and Nr 2 place for online planning poker!
+      The No. 1 and No. 2 place for online planning poker!
     </p>
     <ol>
       <li :class="{ strike: getSessionStarted }">
@@ -28,7 +28,7 @@
           :class="{ success: getIsAblyConnectedStatus, failed: !getIsAblyConnectedStatus}"
         />
       </h2>
-      <JoinDetails />
+      <ParticipantSection />
       <p>
         Once everyone has submitted their vote, click the
         <i>Show votes</i> button to show the results. Click
@@ -55,22 +55,22 @@
         />
       </div>
     </div>
-    <TheFooter />
+    <FooterSection />
   </div>
 </template>
 
 <script>
 import CardItem from "./CardItem.vue";
-import JoinDetails from "./JoinDetails.vue";
-import TheFooter from "./TheFooter.vue";
+import ParticipantSection from "./ParticipantSection.vue";
+import FooterSection from "./FooterSection.vue";
 
 import { mapGetters, mapActions } from "vuex";
 
 export default {
   components: {
     CardItem,
-    JoinDetails,
-    TheFooter,
+    ParticipantSection,
+    FooterSection,
   },
   computed: {
     ...mapGetters([

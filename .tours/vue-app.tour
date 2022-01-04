@@ -25,7 +25,7 @@
     },
     {
       "file": "src/App.vue",
-      "description": "The `App.vue` file is the root component of the application. It references `TheHomePage` component and Vuex getters and actions.",
+      "description": "The `App.vue` file is the root component of the application. It references `HomePage` component and Vuex getters and actions.",
       "line": 3,
       "title": "App.vue"
     },
@@ -52,14 +52,14 @@
       "title": "App.vue - destroyed"
     },
     {
-      "file": "src/components/TheHomePage.vue",
-      "description": "`TheHomePage` contains the most of structure of the application.",
+      "file": "src/components/HomePage.vue",
+      "description": "`HomePage` contains the most of structure of the application.",
       "line": 1,
-      "title": "TheHomePage.vue"
+      "title": "HomePage.vue"
     },
     {
-      "file": "src/components/TheHomePage.vue",
-      "description": "This component references three smaller components; `CardItem`, `JoinDetails`, and `TheFooter` as well as several Vuex getters and actions.",
+      "file": "src/components/HomePage.vue",
+      "description": "This component references three smaller components; `CardItem`, `ParticipantSection`, and `FooterSection` as well as several Vuex getters and actions.",
       "line": 48,
       "selection": {
         "start": {
@@ -71,16 +71,16 @@
           "character": 47
         }
       },
-      "title": "TheHomePage.vue - imports"
+      "title": "HomePage.vue - imports"
     },
     {
-      "file": "src/components/TheHomePage.vue",
+      "file": "src/components/HomePage.vue",
       "description": "The `start()` method is called when the first participant clicks the *Start Session* button. A new connection to Ably is made, and the client is subscribed to the channel. To allow the other participants to join this session, the sessionId is added to the url, and the url is copied to the clipboard so it can be shared easily.",
       "line": 80,
-      "title": "TheHomePage.vue - start"
+      "title": "HomePage.vue - start"
     },
     {
-      "file": "src/components/TheHomePage.vue",
+      "file": "src/components/HomePage.vue",
       "description": "The `reset()` method is called when the participant clicks the *Flush votes* button. This action resets all the votes and is propagated to all the connected clients.",
       "line": 83,
       "selection": {
@@ -93,13 +93,13 @@
           "character": 7
         }
       },
-      "title": "TheHomePage - reset"
+      "title": "HomePage - reset"
     },
     {
-      "file": "src/components/JoinDetails.vue",
-      "description": "The `JoinDetails` component is used to show how many participants have joined and how many have voted.",
+      "file": "src/components/ParticipantSection.vue",
+      "description": "The `ParticipantSection` component is used to show how many participants have joined and how many have voted.",
       "line": 2,
-      "title": "JoinDetails.vue"
+      "title": "ParticipantSection.vue"
     },
     {
       "file": "src/components/CardItem.vue",
@@ -124,10 +124,10 @@
       "title": "CardItem - selectCard"
     },
     {
-      "file": "src/components/TheFooter.vue",
-      "description": "The `TheFooter` component renders this small part of static html with contact details.",
+      "file": "src/components/FooterSection.vue",
+      "description": "The `FooterSection` component renders this small part of static html with contact details.",
       "line": 7,
-      "title": "TheFooter.vue"
+      "title": "FooterSection.vue"
     },
     {
       "file": "src/router/index.js",

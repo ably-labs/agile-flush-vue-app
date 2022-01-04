@@ -3,7 +3,7 @@ sequenceDiagram
     activate Vuex
     Vuex->>Vuex: handleNewParticipantEntered(participant)
     Vuex->>Vuex: addParticipantJoined(clientId)
-    Client->>Vuex: getNrOfParticipantsJoined()
+    Client->>Vuex: numberOfParticipantsJoined()
     Vuex-->>Client: count
     
     deactivate Vuex
