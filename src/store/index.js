@@ -155,23 +155,23 @@ export const store = createStore({
     ],
   },
   getters: {
-    getIsAblyConnectedStatus: (state) => state.isAblyConnected,
-    getClientId: (state) => state.ablyClientId,
-    getSessionId: (state) => state.sessionId,
-    getSessionStarted: (state) =>
+    isAblyConnected: (state) => state.isAblyConnected,
+    clientId: (state) => state.ablyClientId,
+    sessionId: (state) => state.sessionId,
+    hasSessionStarted: (state) =>
       state.sessionId !== null && state.sessionId !== undefined,
-    getNrOfParticipantsJoined: (state) => state.participantsJoinedArr.length,
-    getHaveParticipantsJoined: (state) => state.participantsJoinedArr.length > 1,
-    getShowResults: (state) => state.showResults,
-    getCards: (state) => state.cards,
-    getCardIndex: (state) => (cardNumber) => {
+    numberOfParticipantsJoined: (state) => state.participantsJoinedArr.length,
+    haveParticipantsJoined: (state) => state.participantsJoinedArr.length > 1,
+    showResults: (state) => state.showResults,
+    cards: (state) => state.cards,
+    cardIndex: (state) => (cardNumber) => {
       return state.cards.findIndex((card) => card.number === cardNumber);
     },
-    getVoteCountForCard: (state) => (cardNumber) => {
+    voteCountForCard: (state) => (cardNumber) => {
       return state.cards.filter((card) => card.number === cardNumber)[0].count
         .length;
     },
-    getIsCardSelectedByClient: (state) => (cardNumber) => {
+    isCardSelectedByClient: (state) => (cardNumber) => {
       let clientIds = state.cards.filter(card => card.number === cardNumber)[0].count;
       if (clientIds.length > 0) {
         return clientIds.includes(state.ablyClientId);
@@ -179,13 +179,13 @@ export const store = createStore({
         return false;
       }
     },
-    getIsAnyCardSelectedByClient: (state) => {
+    isAnyCardSelectedByClient: (state) => {
       let cardCount = state.cards.filter(
         card => card.count.length > 0 && card.count.includes(state.ablyClientId)
       ).length;
       return cardCount > 0;
     },
-    getSelectedCardForClient: (state) => (clientId) => {
+    selectedCardForClient: (state) => (clientId) => {
       let selectedByClient = state.cards.filter(card =>
         card.count.length > 0 &&
         card.count.includes(clientId))[0];
@@ -194,7 +194,7 @@ export const store = createStore({
       }
       return null;
     },
-    getNrOfParticipantsVoted: (state) => {
+    numberOfParticipantsVoted: (state) => {
       let concatenatedCount = [];
       state.cards.forEach(card => {
         concatenatedCount.push(...card.count);
@@ -233,7 +233,7 @@ export const store = createStore({
     },
     addParticipantVoted(state, clientVote) {
       console.log("addParticipantVoted", clientVote);
-      let index = this.getters.getCardIndex(clientVote.cardNumber);
+      let index = this.getters.cardIndex(clientVote.cardNumber);
       if (!state.cards[index].count.includes(clientVote.clientId)) {
         state.cards[index].count.push(clientVote.clientId);
       }
@@ -241,7 +241,7 @@ export const store = createStore({
 
     removeParticipantVoted(state, clientVote) {
       console.log("removeParticipantVoted", clientVote);
-      let index = this.getters.getCardIndex(clientVote.cardNumber);
+      let index = this.getters.cardIndex(clientVote.cardNumber);
       if (state.cards[index].count.includes(clientVote.clientId)) {
         state.cards[index].count.splice(
           state.cards[index].count.findIndex(
@@ -266,7 +266,7 @@ export const store = createStore({
 
   actions: {
     instantiateAblyConnection(vueContext, ids) {
-      if (!this.getters.getIsAblyConnectedStatus) {
+      if (!this.getters.isAblyConnected) {
         const ablyInstance = new Ably.Realtime({
           authUrl: "/api/createTokenRequest",
           echoMessages: false,
@@ -347,7 +347,7 @@ export const store = createStore({
     handleExistingParticipantLeft(vueContext, participant) {
       console.log("handleExistingParticipantLeft", participant);
       vueContext.commit("removeParticipantJoined", participant.clientId);
-      let cardNumber = this.getters.getSelectedCardForClient(participant.clientId);
+      let cardNumber = this.getters.selectedCardForClient(participant.clientId);
       if (cardNumber !== null) {
         vueContext.commit("removeParticipantVoted", {
           clientId: participant.clientId,
@@ -438,7 +438,7 @@ export const store = createStore({
       vueContext.commit("toggleShowResults");
       vueContext.dispatch(
         "publishShowResultsToAbly",
-        this.getters.getShowResults
+        this.getters.showResults
       );
     },
 

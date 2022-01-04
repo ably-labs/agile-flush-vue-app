@@ -13,7 +13,7 @@ export default {
     HomePage,
   },
   computed: {
-    ...mapGetters(["getSessionId"]),
+    ...mapGetters(["sessionId"]),
     routeSessionId() {
       return this.$route.query.sessionId;
     },
@@ -24,7 +24,7 @@ export default {
   beforeMount() {
     if (this.routeSessionId !== undefined) {
       this.startSession(this.routeSessionId);
-      let sessionId = this.getSessionId;
+      let sessionId = this.sessionId;
       document.title = `Agile Flush - ${sessionId}`;
       this.instantiateAblyConnection( { "sessionId": sessionId, "clientId": this.routeClientId });
     }

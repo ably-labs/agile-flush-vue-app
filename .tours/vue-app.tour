@@ -165,7 +165,7 @@
     },
     {
       "file": "src/store/index.js",
-      "description": "The `getters` property contain getter functions for retrieve/query the state, for example: `getVoteCountForCard()`. Getter functions are called from components, or from `mutations`or `actions` inside this file.",
+      "description": "The `getters` property contain getter functions for retrieve/query the state, for example: `voteCountForCard()`. Getter functions are called from components, or from `mutations`or `actions` inside this file.",
       "line": 157,
       "selection": {
         "start": {

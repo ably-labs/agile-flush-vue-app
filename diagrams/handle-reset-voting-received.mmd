@@ -3,7 +3,7 @@ sequenceDiagram
     activate Vuex
     Vuex->>Vuex: handleResetVotingReceived(vote)
     Vuex->>Vuex: commonResetVoting(vote)
-    Client->>Vuex: getVoteCountForCard(cardNumber)
+    Client->>Vuex: voteCountForCard(cardNumber)
     Vuex-->>Client: count
     Client->>Vuex: numberOfParticipantsVoted()
     Vuex-->>Client: count

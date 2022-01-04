@@ -7,6 +7,6 @@ sequenceDiagram
     activate Ably
     Ably->>Other Clients: broadcast: show-results
     deactivate Ably
-    Client->>Vuex: getShowResults()
+    Client->>Vuex: showResults()
     Vuex-->>Client: bool
     deactivate Vuex
