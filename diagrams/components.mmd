@@ -3,7 +3,7 @@ flowchart TD
         step2[Ably app]
     end
     subgraph azure [Azure Static Web Apps]
-        step1[Vue3 application]-->step3
-        step3[NodeJS Azure Function]-->step2
+        step1[Vue.js application]-->step3
+        step3[Node.js Azure Function]-->step2
     end
     step1 <--channel--> step2
