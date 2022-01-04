@@ -1,16 +1,9 @@
 <template>
   <div :id="card.number">
-    <button
-      class="visual"
-      :class="{ selected: isCardSelectedByClient(card.number) }"
-      @click="selectCard(card.number)"
-    >
+    <button class="visual" :class="{ selected: isCardSelectedByClient(card.number) }" @click="selectCard(card.number)">
       {{ card.visual }}
     </button>
-    <p
-      v-if="showResults"
-      class="votecount"
-    >
+    <p v-if="showResults" class="votecount">
       {{ voteCountForCard(card.number) }}
     </p>
   </div>
@@ -34,37 +27,31 @@ export default {
       "clientId",
       "isCardSelectedByClient",
       "isAnyCardSelectedByClient",
-      "voteCountForCard",
+      "voteCountForCard"
     ]),
     routeSessionId() {
       return this.$route.query.sessionId;
     },
     routeClientId() {
       return this.$route.query.clientId;
-    },
+    }
   },
   methods: {
     ...mapActions(["doVote", "undoVote"]),
     async selectCard(number) {
       if (this.isAnyCardSelectedByClient === false) {
         this.doVote(number);
-      } else if (
-        this.isAnyCardSelectedByClient &&
-        this.isCardSelectedByClient(this.card.number)
-      ) {
+      } else if (this.isAnyCardSelectedByClient && this.isCardSelectedByClient(this.card.number)) {
         this.undoVote(number);
       }
-      if (
-        this.routeSessionId === undefined ||
-        this.routeClientId === undefined
-      ) {
+      if (this.routeSessionId === undefined || this.routeClientId === undefined) {
         await this.$router.replace({
-          path: '/',
-          query: { sessionId: this.sessionId, clientId: this.clientId },
+          path: "/",
+          query: { sessionId: this.sessionId, clientId: this.clientId }
         });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -93,5 +80,4 @@ button.visual:hover {
   text-align: center;
   margin: 2px;
 }
-
 </style>
