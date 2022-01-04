@@ -56,21 +56,5 @@ export const store = createStore({
         getters.showResults
       );
     },
-    doVote({ dispatch, commit, getters }, cardNumber) {
-      let clientVote = {
-        clientId: getters.clientId,
-        cardNumber: cardNumber,
-      };
-      commit("addParticipantVoted", clientVote);
-      dispatch("publishVoteToAbly", clientVote);
-    },
-    undoVote({ dispatch, commit, getters }, cardNumber) {
-      let clientVote = {
-        clientId: getters.clientId,
-        cardNumber: cardNumber,
-      };
-      commit("removeParticipantVoted",  clientVote);
-      dispatch("publishUndoVoteToAbly", clientVote);
-    },
   },
 });
