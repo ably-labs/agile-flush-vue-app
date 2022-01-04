@@ -79,8 +79,8 @@ export const realtimeModule = {
     closeAblyConnection({ state }) {
       state.ablyRealtimeInstance.connection.close();
     },
-    async attachToAblyChannels({dispatch, commit, state}) {
-      const channelName = `${state.channelNames.voting}-${state.sessionId}`;
+    async attachToAblyChannels({dispatch, commit, getters, state}) {
+      const channelName = `${state.channelNames.voting}-${getters.sessionId}`;
       const votingChannel = await state.ablyRealtimeInstance.channels.get(
         channelName,
         {
