@@ -32,7 +32,7 @@ sequenceDiagram
     end
     Vuex->>Ably: subscribeToAblyPresence()
     Vuex->>Ably: enterClientInAblyPresenceSet()
-    Client->>Vuex: getNrOfParticipantsJoined()
+    Client->>Vuex: numberOfParticipantsJoined()
     Vuex-->>Client: count
     deactivate Vuex
     Ably->>Other Clients: broadcast: participant entered

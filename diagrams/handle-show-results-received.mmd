@@ -3,6 +3,6 @@ sequenceDiagram
     activate Vuex
     Vuex->>Vuex: handleShowResultsReceived(bool)
     Vuex->>Vuex: setShowResults(bool)
-    Client->>Vuex: getShowResults()
+    Client->>Vuex: showResults()
     Vuex-->>Client: bool   
     deactivate Vuex

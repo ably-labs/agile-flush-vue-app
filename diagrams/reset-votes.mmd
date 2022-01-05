@@ -7,8 +7,8 @@ sequenceDiagram
     activate Ably
     Ably->>Other Clients: broadcast: reset-voting
     deactivate Ably
-    Client->>Vuex: getVoteCountForCard(cardNumber)
+    Client->>Vuex: voteCountForCard(cardNumber)
     Vuex-->>Client: count
-    Client->>Vuex: getNrOfParticipantsVoted()
+    Client->>Vuex: numberOfParticipantsVoted()
     Vuex-->>Client: count
     deactivate Vuex

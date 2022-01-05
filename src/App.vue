@@ -1,19 +1,18 @@
 <template>
-  <TheHomePage />
+  <HomePage />
 </template>
 
 <script>
-import TheHomePage from "./components/TheHomePage.vue";
-
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from 'vuex';
+import HomePage from './components/HomePage.vue';
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
-    TheHomePage,
+    HomePage,
   },
   computed: {
-    ...mapGetters(["getSessionId"]),
+    ...mapGetters(['sessionId']),
     routeSessionId() {
       return this.$route.query.sessionId;
     },
@@ -24,9 +23,12 @@ export default {
   beforeMount() {
     if (this.routeSessionId !== undefined) {
       this.startSession(this.routeSessionId);
-      let sessionId = this.getSessionId;
+      const { sessionId } = this;
       document.title = `Agile Flush - ${sessionId}`;
-      this.instantiateAblyConnection( { "sessionId": sessionId, "clientId": this.routeClientId });
+      this.instantiateAblyConnection({
+        sessionId,
+        clientId: this.routeClientId,
+      });
     }
   },
   unmounted() {
@@ -34,9 +36,9 @@ export default {
   },
   methods: {
     ...mapActions([
-      "instantiateAblyConnection",
-      "closeAblyConnection",
-      "startSession",
+      'instantiateAblyConnection',
+      'closeAblyConnection',
+      'startSession',
     ]),
   },
 };

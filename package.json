@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "init": "npm clean-install && cd api && npm clean-install",
+    "all": "npm run dev & (cd api && func start) & swa start http://localhost:3000 --api-location http://localhost:7071",
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
@@ -26,8 +27,17 @@
   },
   "devDependencies": {
     "@azure/static-web-apps-cli": "^0.8.2",
-    "eslint-plugin-vue": "^8.1.1",
     "@vitejs/plugin-vue": "^2.0.1",
+    "eslint": "^8.6.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "eslint-plugin-vue": "^8.2.0",
+    "prettier": "^2.5.1",
     "vite": "^2.7.3"
   },
   "eslintConfig": {
