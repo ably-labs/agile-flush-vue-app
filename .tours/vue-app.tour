@@ -43,24 +43,24 @@
           "character": 4
         }
       },
-      "title": "App.vue - created"
+      "title": "App.vue - beforeMount"
     },
     {
       "file": "src/App.vue",
       "description": "Once the Vue app is unmounted, the connection with Ably is terminated.",
-      "line": 32,
-      "title": "App.vue - destroyed"
+      "line": 35,
+      "title": "App.vue - unmounted"
     },
     {
       "file": "src/components/HomePage.vue",
-      "description": "`HomePage` contains the most of structure of the application.",
+      "description": "The `HomePage` contains the high level page layout.",
       "line": 1,
       "title": "HomePage.vue"
     },
     {
       "file": "src/components/HomePage.vue",
-      "description": "This component references three smaller components; `CardItem`, `ParticipantSection`, and `FooterSection` as well as several Vuex getters and actions.",
-      "line": 48,
+      "description": "This component references two other components; `SessionSection`, and `FooterSection`, as well as several Vuex getters and actions.",
+      "line": 35,
       "selection": {
         "start": {
           "line": 44,
@@ -76,41 +76,49 @@
     {
       "file": "src/components/HomePage.vue",
       "description": "The `start()` method is called when the first participant clicks the *Start Session* button. A new connection to Ably is made, and the client is subscribed to the channel. To allow the other participants to join this session, the sessionId is added to the url, and the url is copied to the clipboard so it can be shared easily.",
-      "line": 80,
+      "line": 50,
       "title": "HomePage.vue - start"
     },
     {
-      "file": "src/components/HomePage.vue",
-      "description": "The `reset()` method is called when the participant clicks the *Flush votes* button. This action resets all the votes and is propagated to all the connected clients.",
-      "line": 83,
-      "selection": {
-        "start": {
-          "line": 81,
-          "character": 5
-        },
-        "end": {
-          "line": 83,
-          "character": 7
-        }
-      },
-      "title": "HomePage - reset"
+      "file": "src/components/SessionSection.vue",
+      "description": "The `SessionSection` component contains the template for once a session has started.",
+      "line": 2,
+      "title": "SessionSection.vue"
     },
     {
-      "file": "src/components/ParticipantSection.vue",
-      "description": "The `ParticipantSection` component is used to show how many participants have joined and how many have voted.",
-      "line": 2,
-      "title": "ParticipantSection.vue"
+      "file": "src/components/SessionSection.vue",
+      "description": "The template uses Vuex getters to retrieve the number of participants that have joined & voted.",
+      "line": 9,
+      "title": "SessionSection - participants"
+    },
+    {
+      "file": "src/components/SessionSection.vue",
+      "description": "There is a button to toggle the visiblity of the voting results. This button triggers a Vuex action that publishes a `show-results` message to the other clients.",
+      "line": 15,
+      "title": "SessionSection - toggle results"
+    },
+    {
+      "file": "src/components/SessionSection.vue",
+      "description": "The _Flush votes_ button resets the votes and uses a Vuex action to publish a `reset-votes` message to the clients.",
+      "line": 19,
+      "title": "SessionSection - flush votes"
+    },
+    {
+      "file": "src/components/SessionSection.vue",
+      "description": "For each of the cards in the `cards` collection the `CardItem` component is used.",
+      "line": 31,
+      "title": "SessionSection - cards collection"
     },
     {
       "file": "src/components/CardItem.vue",
-      "description": "The `CardItem` component is used to render the voting cards.",
+      "description": "The `CardItem` component is used to render the individual voting cards.",
       "line": 1,
       "title": "CardItem.vue"
     },
     {
       "file": "src/components/CardItem.vue",
       "description": "The `selectCard()` function is called when a participant clicks on a card. Since only one card can be selected at any time a check is made before a card is selected. If no card is selected, the `doVote()` function is called which sends a *vote* message to all connected clients. If the selected card is selected again, the `undoVote()` function is called, which deselects the card and sends an *undo-vote* mnessage to all connected clients.",
-      "line": 60,
+      "line": 49,
       "selection": {
         "start": {
           "line": 42,
@@ -124,9 +132,15 @@
       "title": "CardItem - selectCard"
     },
     {
+      "file": "src/components/CardItem.vue",
+      "description": "The visual representation of the voting cards are present as ASCII art in CSS.",
+      "line": 95,
+      "title": "CardItem - CSS card content"
+    },
+    {
       "file": "src/components/FooterSection.vue",
       "description": "The `FooterSection` component renders this small part of static html with contact details.",
-      "line": 7,
+      "line": 1,
       "title": "FooterSection.vue"
     },
     {
@@ -153,20 +167,26 @@
     },
     {
       "file": "src/store/index.js",
+      "description": "The Vuex store uses seperate modules to prevent having everything in one big file. \n- The `cardModule` contains the state and behaviour for anything related to the voting cards.\n- The `realtimeModule` contains the state and behaviour for anything related to Ably Realtime, for instance; the connection, the channels, and publishing messages.",
+      "line": 5,
+      "title": "Vuex store - modules"
+    },
+    {
+      "file": "src/store/cardModule.js",
       "description": "The `state` tree contains all the data fields we want to update and use in the components.",
-      "line": 6,
+      "line": 11,
       "title": "store - state"
     },
     {
-      "file": "src/store/index.js",
+      "file": "src/store/cardModule.js",
       "description": "The `cards` property is one of the most important ones. It contains definitions for all of the voting cards (numbers and ASCII visuals) as well as a `count` array that is used to store the clientIds of the participants who selected that card.\n\nIf you want more cards, like a coffee card, or an infinity card, you can add these to this `cards` array. Just make sure the `number` field is unique.",
       "line": 19,
       "title": "store - cards state"
     },
     {
-      "file": "src/store/index.js",
-      "description": "The `getters` property contain getter functions for retrieve/query the state, for example: `voteCountForCard()`. Getter functions are called from components, or from `mutations`or `actions` inside this file.",
-      "line": 157,
+      "file": "src/store/cardModule.js",
+      "description": "The `getters` property contain getter functions for retrieve/query the state, for example: `voteCountForCard()`. Getter functions are called from components, or from `mutations`or `actions`.",
+      "line": 54,
       "selection": {
         "start": {
           "line": 247,
@@ -180,21 +200,21 @@
       "title": "store - getters"
     },
     {
-      "file": "src/store/index.js",
+      "file": "src/store/cardModule.js",
       "description": "The `mutations` property contains functions to alter the state properties, for example: `addParticipantVoted()`. Mutation functions are called from `actions` functions.",
-      "line": 205,
+      "line": 86,
       "title": "store - mutations"
     },
     {
-      "file": "src/store/index.js",
-      "description": "The `actions` property contains functions that combines `getters` and `mutations` functions.",
-      "line": 267,
-      "title": "store - actions"
+      "file": "src/store/cardModule.js",
+      "description": "The `actions` property contains functions that combines `getters` and `mutations` functions.\n\nThe `doVote` action is triggered when the participant selects a card. It adds the clientId to the `card.count` via the `addParticipantVoted` mutation and calls the `publishVoteToAbly` action to send the vote to the other connected clients.",
+      "line": 110,
+      "title": "store - actions, doVote"
     },
     {
-      "file": "src/store/index.js",
+      "file": "src/store/realtimeModule.js",
       "description": "The `instantiateAblyConnection` action is responsible for:\n\n* Creating a new Ably.Realtime instance.\n* Updating the connection status.\n* Attaching this client to the Ably channel.\n* Retrieving the presence information (other connected clients) of the channel.\n* Subscribing to presence and voting information.",
-      "line": 268,
+      "line": 50,
       "selection": {
         "start": {
           "line": 271,
@@ -208,27 +228,21 @@
       "title": "store - instantiateAblyConnection action"
     },
     {
-      "file": "src/store/index.js",
+      "file": "src/store/realtimeModule.js",
       "description": "The `subscribeToAblyVoting()` action ensures that this client is listening to these named messages in the voting channel:\n\n* *vote*\n* *undo-vote*\n* *show-results*\n* *reset-voting*\n\nWhenever these messages are received a corresponding `actions` function is called to handle the message.",
-      "line": 359,
+      "line": 136,
       "title": "store - subscribeToAblyVoting action"
     },
     {
       "file": "src/store/index.js",
-      "description": "The `startSession()` action either uses the supplied `sessionId` from the route or generates a new `sessionId` via `generateName()`. The `sessionId` is then stored in state via the `setSessionId` mutation.",
-      "line": 408,
+      "description": "The `startSession()` action either uses the supplied `sessionId` from the route or generates a new `sessionId` via `generateSessionId()`. The `sessionId` is then stored in state via the `setSessionId` mutation.",
+      "line": 42,
       "title": "store - startSession"
     },
     {
       "file": "src/store/index.js",
-      "description": "The `doVote` action is triggered when the participant selects a card. It adds the clientId to the `card.count` via the `addParticipantVoted` mutation and calls the `publishVoteToAbly` action to send the vote to the other connected clients.",
-      "line": 451,
-      "title": "store - doVote action"
-    },
-    {
-      "file": "src/store/index.js",
       "description": "The `resetVoting` action calls the `commonResetVoting` action to clear out the clientIds from the card.count state and publishes a `reset-voting` message via the `publishResetVotingToAbly` action to trigger the reset at the other connected clients.",
-      "line": 416,
+      "line": 38,
       "selection": {
         "start": {
           "line": 421,
@@ -244,7 +258,7 @@
     {
       "file": "src/store/index.js",
       "description": "The `toggleShowResults` action is triggered by the Show/Hide Results button and toggles the visibility of the votes. The `toggleShowResults` mutation updates the state and the `publishShowResultsToAbly` action publishes a `show-results` message that is used by the connected clients to show/hide their local voting results.",
-      "line": 437,
+      "line": 51,
       "selection": {
         "start": {
           "line": 443,
