@@ -1,7 +1,7 @@
-import { createStore } from "vuex";
-import { generateSessionId } from "../util/sessionIdGenerator.js";
-import { cardModule } from "./cardModule.js";
-import { realtimeModule } from "./realtimeModule.js";
+import { createStore } from 'vuex';
+import { generateSessionId } from '../util/sessionIdGenerator';
+import { cardModule } from './cardModule';
+import { realtimeModule } from './realtimeModule';
 
 export const store = createStore({
   modules: {
@@ -14,8 +14,7 @@ export const store = createStore({
   },
   getters: {
     sessionId: (state) => state.sessionId,
-    hasSessionStarted: (state) =>
-      state.sessionId !== null && state.sessionId !== undefined,
+    hasSessionStarted: (state) => state.sessionId !== null && state.sessionId !== undefined,
     showResults: (state) => state.showResults,
   },
   mutations: {
@@ -31,14 +30,14 @@ export const store = createStore({
   },
   actions: {
     commonResetVoting({ commit }) {
-      let flush = new Audio("flush.mp3");
+      const flush = new Audio('flush.mp3');
       flush.play();
-      commit("resetCards");
-      commit("setShowResults", false);
+      commit('resetCards');
+      commit('setShowResults', false);
     },
     resetVoting({ dispatch }) {
-      dispatch("commonResetVoting");
-      dispatch("publishResetVotingToAbly");
+      dispatch('commonResetVoting');
+      dispatch('publishResetVotingToAbly');
     },
     startSession({ commit }, routeSessionId) {
       let sessionId;
@@ -47,13 +46,13 @@ export const store = createStore({
       } else {
         sessionId = routeSessionId;
       }
-      commit("setSessionId", sessionId);
+      commit('setSessionId', sessionId);
     },
     toggleShowResults({ dispatch, commit, getters }) {
-      commit("toggleShowResults");
+      commit('toggleShowResults');
       dispatch(
-        "publishShowResultsToAbly",
-        getters.showResults
+        'publishShowResultsToAbly',
+        getters.showResults,
       );
     },
   },

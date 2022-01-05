@@ -1,6 +1,11 @@
 <template>
   <div v-if="hasSessionStarted">
-    <h2>Session: {{ sessionId }} <span class="status" :class="{ success: isAblyConnected, failed: !isAblyConnected }" /></h2>
+    <h2>
+      Session: {{ sessionId }} <span
+        class="status"
+        :class="{ success: isAblyConnected, failed: !isAblyConnected }"
+      />
+    </h2>
     <p>Received {{ numberOfParticipantsVoted }} votes from {{ numberOfParticipantsJoined }} participants.</p>
     <p>
       Once everyone has submitted their vote, click the
@@ -9,7 +14,12 @@
     <button @click="toggleShowResults">
       {{ showResults ? "Hide votes" : "Show votes" }}
     </button>
-    <button :disabled="!showResults" @click="resetVoting">Flush votes</button>
+    <button
+      :disabled="!showResults"
+      @click="resetVoting"
+    >
+      Flush votes
+    </button>
     <h3>Cards</h3>
     <p>Click on a card to vote. To undo your vote, click the card again.</p>
     <div class="card-list">
@@ -24,28 +34,32 @@
 </template>
 
 <script>
-import CardItem from "./CardItem.vue";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from 'vuex';
+import CardItem from './CardItem.vue';
 
 export default {
   components: {
-    CardItem
+    CardItem,
   },
   computed: {
     ...mapGetters([
-      "isAblyConnected",
-      "showResults",
-      "sessionId",
-      "hasSessionStarted",
-      "cards",
-      "isAnyCardSelectedByClient",
-      "numberOfParticipantsVoted",
-      "numberOfParticipantsJoined"
-    ])
+      'isAblyConnected',
+      'showResults',
+      'sessionId',
+      'hasSessionStarted',
+      'cards',
+      'isAnyCardSelectedByClient',
+      'numberOfParticipantsVoted',
+      'numberOfParticipantsJoined',
+    ]),
   },
   methods: {
-    ...mapActions(["instantiateAblyConnection", "toggleShowResults", "resetVoting"])
-  }
+    ...mapActions([
+      'instantiateAblyConnection',
+      'toggleShowResults',
+      'resetVoting',
+    ]),
+  },
 };
 </script>
 

@@ -91,7 +91,34 @@ For more info developing Static Web Apps locally see the [official Azure docs](h
     npm run all
     ```
 
-    This command starts the Vue app at `http://localhost:3000`, the Azure Functions app at `http://localhost:7071`, and Static Web Apps at `http://localhost:4280`. If these ports are already in use, please change them in the package.json file.
+    This command starts the Vue app at `http://localhost:3000`, the Azure Functions app at `http://localhost:7071`, and Static Web Apps at `http://localhost:4280`.
+
+    <details>
+    <summary>If these ports are already in use, please change them in the `package.json` file or start the apps individually.  </summary>
+
+    A. To run the Vue application, run this in the root of the repository:
+
+    ```cmd
+    npm run dev
+    ```
+
+    The Vue app will be available at `http://localhost:3000`.
+
+    B. To start the Azure Functions runtime, run this in the `api` folder of the repository:
+
+    ```cmd
+    func start
+    ```
+
+    The Azure Functions app will be available at `http://localhost:7071`.
+
+    C. To start the Static Web App emulator, run this in the root of the repository:
+
+    ```cmd
+    swa start http://localhost:3000 --api-location http://localhost:7071
+    ```
+
+    </details>
 
 1. Now you can use the application using the endpoint provided by the Static Web Apps emulator: `http://localhost:4280`.
 

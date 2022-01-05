@@ -5,41 +5,47 @@
       :class="[card.style, { selected: isCardSelectedByClient(card.number) }]"
       @click="selectCard(card.number)"
     />
-    <p v-if="showResults" class="votecount">
+    <p
+      v-if="showResults"
+      class="votecount"
+    >
       {{ voteCountForCard(card.number) }}
     </p>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
-  name: "CardItem",
+  name: 'CardItem',
   props: {
     card: {
       type: Object,
-      default: null
-    }
+      default: null,
+    },
   },
   computed: {
     ...mapGetters([
-      "showResults",
-      "sessionId",
-      "clientId",
-      "isCardSelectedByClient",
-      "isAnyCardSelectedByClient",
-      "voteCountForCard"
+      'showResults',
+      'sessionId',
+      'clientId',
+      'isCardSelectedByClient',
+      'isAnyCardSelectedByClient',
+      'voteCountForCard',
     ]),
     routeSessionId() {
       return this.$route.query.sessionId;
     },
     routeClientId() {
       return this.$route.query.clientId;
-    }
+    },
   },
   methods: {
-    ...mapActions(["doVote", "undoVote"]),
+    ...mapActions([
+      'doVote',
+      'undoVote',
+    ]),
     async selectCard(number) {
       if (this.isAnyCardSelectedByClient === false) {
         this.doVote(number);
@@ -48,12 +54,15 @@ export default {
       }
       if (this.routeSessionId === undefined || this.routeClientId === undefined) {
         await this.$router.replace({
-          path: "/",
-          query: { sessionId: this.sessionId, clientId: this.clientId }
+          path: '/',
+          query: {
+            sessionId: this.sessionId,
+            clientId: this.clientId,
+          },
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
