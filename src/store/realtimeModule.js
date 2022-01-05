@@ -1,9 +1,9 @@
-import * as Ably from 'ably';
+import { Realtime } from 'ably/promises';
 
 export const realtimeModule = {
   state: () => ({
     ablyClientId: null,
-    ablyRealtimeInstance: null,
+    ablyRealtimeClient: null,
     channelNames: {
       voting: 'voting',
     },
@@ -42,8 +42,8 @@ export const realtimeModule = {
     setAblyConnectionStatus(state, status) {
       state.isAblyConnected = status;
     },
-    setAblyRealtimeInstance(state, ablyRealtimeInstance) {
-      state.ablyRealtimeInstance = ablyRealtimeInstance;
+    setAblyRealtimeClient(state, ablyRealtimeClient) {
+      state.ablyRealtimeClient = ablyRealtimeClient;
     },
   },
   actions: {
@@ -51,16 +51,16 @@ export const realtimeModule = {
       dispatch, commit, state, getters,
     }, ids) {
       if (!getters.isAblyConnected) {
-        const ablyInstance = new Ably.Realtime({
+        const realtimeClient = new Realtime({
           authUrl: '/api/createTokenRequest',
           echoMessages: false,
         });
-        ablyInstance.connection.on('connected', () => {
+        realtimeClient.connection.on('connected', () => {
           commit('setAblyConnectionStatus', true);
-          commit('setAblyRealtimeInstance', ablyInstance);
+          commit('setAblyRealtimeClient', realtimeClient);
           commit(
             'setAblyClientId',
-            ids.clientId ?? state.ablyRealtimeInstance.auth.clientId,
+            ids.clientId ?? state.ablyRealtimeClient.auth.clientId,
           );
           if (ids.sessionId) {
             commit('setSessionId', ids.sessionId);
@@ -73,19 +73,19 @@ export const realtimeModule = {
           });
         });
 
-        ablyInstance.connection.on('disconnected', () => {
+        realtimeClient.connection.on('disconnected', () => {
           commit('setAblyConnectionStatus', false);
         });
       }
     },
     closeAblyConnection({ state }) {
-      state.ablyRealtimeInstance.connection.close();
+      state.ablyRealtimeClient.connection.close();
     },
     async attachToAblyChannels({
       dispatch, commit, getters, state,
     }) {
       const channelName = `${state.channelNames.voting}-${getters.sessionId}`;
-      const votingChannel = await state.ablyRealtimeInstance.channels.get(
+      const votingChannel = await state.ablyRealtimeClient.channels.get(
         channelName,
         {
           params: { rewind: '2m' },
