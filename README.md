@@ -12,7 +12,7 @@ This is the flow diagram how users can interact with the application.
 
 The `*` mark the actions that will be synchronized across all team members.
 
-The live version can be used here: [Agile Flush on Azure](https://gentle-moss-08d9e3303.azurestaticapps.net).
+The live version can be used here: [Agile Flush on Azure](https://agileflush.ably.dev/).
 
 ## The tech stack
 
