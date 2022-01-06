@@ -1,5 +1,5 @@
 {
-  "name": "Snowpack and Azure Functions",
+  "name": "SWA and Azure Functions",
   "runArgs": ["--init"],
   "build": {
     "dockerfile": "Dockerfile",
