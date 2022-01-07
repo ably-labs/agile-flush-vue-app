@@ -8,7 +8,7 @@ This project is an example of how an online collaboration tool can be built that
 
 This is the flow diagram how users can interact with the application.
 
-![Functionality diagram](/diagrams/functionality.svg)
+![Functionality diagram](/diagrams/agile-flush-functionality.png)
 
 The `*` mark the actions that will be synchronized across all team members.
 
@@ -16,7 +16,7 @@ The live version can be used here: [Agile Flush on Azure](https://agileflush.abl
 
 ## The tech stack
 
-![Component diagram](/diagrams/components.svg)
+![Component diagram](/diagrams/aglile-flush-main-technical-components.png)
 
 The project uses the following components:
 
