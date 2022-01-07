@@ -10,7 +10,7 @@ This is the flow diagram how users can interact with the application.
 
 ![Functionality diagram](/diagrams/agile-flush-functionality.png)
 
-The `*` mark the actions that will be synchronized across all team members.
+Once a planning session has started, all user actions are synchronized across all team members to maintain a consistent state. So *Show/hide votes* and *Reset votes* are triggered for all connected users once these buttons are clicked.
 
 The live version can be used here: [Agile Flush on Azure](https://agileflush.ably.dev/).
 
