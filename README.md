@@ -2,7 +2,7 @@
 
 The No. 1 and No. 2 place for online planning poker!
 
-![AgileFlush Screenshot](agileflush_screenshot.png)
+[![AgileFlush Screenshot](agileflush_screenshot.png)](https://agileflush.ably.dev/)
 
 This project is an example of how an online collaboration tool can be built that depends on realtime data synchronization between clients.
 
