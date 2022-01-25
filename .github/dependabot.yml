@@ -1,0 +1,26 @@
+version: 2
+updates:
+
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+      time: '6:00'
+    reviewers:
+      - 'marcduiker'
+
+  - package-ecosystem: 'npm'
+    directory: '/api'
+    schedule:
+      interval: 'daily'
+      time: '6:00'
+    reviewers:
+      - 'marcduiker'
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: '6:00'
+    reviewers:
+      - 'marcduiker'
