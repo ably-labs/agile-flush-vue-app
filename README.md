@@ -134,3 +134,14 @@ In both cases you can skip the repository creation step since you can use your f
 ## Code Tours
 
 This repository has code tours that guide you through the files and folders in this repository. You can either start the tours in VSCode (enabled by the [CodeTour extension](https://marketplace.visualstudio.com/items?itemName=vsls-contrib.codetour)) or you start them by visiting the [github.dev](https://github.dev/ably-labs/agile-flush-vue-app) version of this repository.
+
+## More info
+
+Want more information about this sample or using Ably in general? Feel free to contact me via Twitter [@marcduiker](https://twitter.com/marcduiker).
+
+- [Ably on Twitter](https://twitter.com/ablyrealtime)
+- [Ably SDKs](https://github.com/ably/)
+- [Ably.com](https://ably.com)
+
+---
+![Ably logo](https://static.ably.dev/badge-black.svg?agile-flush-vue-app)
