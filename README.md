@@ -139,9 +139,10 @@ This repository has code tours that guide you through the files and folders in t
 
 Want more information about this sample or using Ably in general? Feel free to contact me via Twitter [@marcduiker](https://twitter.com/marcduiker).
 
-- [Ably on Twitter](https://twitter.com/ablyrealtime)
-- [Ably SDKs](https://github.com/ably/)
-- [Ably.com](https://ably.com)
+- [Join our Discord server](https://discord.gg/q89gDHZcBK)
+- [Follow us on Twitter](https://twitter.com/ablyrealtime)
+- [Use our SDKs](https://github.com/ably/)
+- [Visit our website](https://ably.com)
 
 ---
-![Ably logo](https://static.ably.dev/badge-black.svg?agile-flush-vue-app)
+[![Ably logo](https://static.ably.dev/badge-black.svg?agile-flush-vue-app)](https://ably.com)
