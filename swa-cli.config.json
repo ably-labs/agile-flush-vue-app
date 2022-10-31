@@ -1,10 +1,14 @@
 {
-    "configurations": {
-      "app": {
-        "context": "http://localhost:3000",
-        "run": "npm run serve",
-        "apiLocation": "http://localhost:7071"
-      }
+  "$schema": "https://aka.ms/azure/static-web-apps-cli/schema",
+  "configurations": {
+    "agile-flush-vue-app": {
+      "appLocation": ".",
+      "apiLocation": "api",
+      "outputLocation": "dist",
+      "appBuildCommand": "npm run build",
+      "apiBuildCommand": "npm run build --if-present",
+      "run": "npm run dev",
+      "appDevserverUrl": "http://localhost:5173"
     }
   }
-  
+}

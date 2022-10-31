@@ -6,7 +6,7 @@
       target="_blank"
     >@marcduiker</a>.
     Powered by <a
-      href="https://www.ably.com"
+      href="https://www.ably.com?utm_campaign=GLB-2201-agile-flush&utm_content=demo-agile-flush&utm_source=ably-dev&utm_medium=demo&src=GLB-2201-agile-flush-ably-dev"
       target="_blank"
     >ably.com</a> 🚀.
     Look at the source on <a
