@@ -22,7 +22,7 @@ The project uses the following components:
 
 - [Vue 3](https://v3.vuejs.org/) as the front-end framework.
 - [NodeJS Azure Function](https://docs.microsoft.com/azure/developer/javascript/how-to/develop-serverless-apps) to do the authentication with Ably.
-- [Ably](https://ably.com/) as the realtime communications platform.
+- [Ably](https://ably.com?utm_campaign=GLB-2201-agile-flush&utm_content=repo-agile-flush&utm_source=github&utm_medium=repo&src=GLB-2201-agile-flush-github) as the realtime communications platform.
 - [Azure Static Web Apps](https://docs.microsoft.com/azure/static-web-apps/overview) to host the Vue application and NodeJS function.
 
 ## Building & running the app yourself
@@ -68,7 +68,7 @@ For more info developing Static Web Apps locally see the [official Azure docs](h
 
 ### Running the application
 
-1. [Sign up](https://ably.com/signup) or [log in](https://ably.com/login) to ably.com, and [create a new app and copy the API key](https://faqs.ably.com/setting-up-and-managing-api-keys).
+1. [Sign up](https://ably.com/signup?utm_campaign=GLB-2201-agile-flush&utm_content=repo-agile-flush&utm_source=github&utm_medium=repo&src=GLB-2201-agile-flush-github) or [log in](https://ably.com/login?utm_campaign=GLB-2201-agile-flush&utm_content=repo-agile-flush&utm_source=github&utm_medium=repo&src=GLB-2201-agile-flush-github) to ably.com, and [create a new app and copy the API key](https://faqs.ably.com/setting-up-and-managing-api-keys?utm_campaign=GLB-2201-agile-flush&utm_content=repo-agile-flush&utm_source=github&utm_medium=repo&src=GLB-2201-agile-flush-github).
 
 1. Add a file named `local.settings.json` to the `api` folder and add the following content:
 
@@ -88,10 +88,10 @@ For more info developing Static Web Apps locally see the [official Azure docs](h
 1. To run everything (Vue application, Azure Function, and Static Web Apps emulator), run this in the root of the repository:
 
     ```cmd
-    npm run all
+    swa start
     ```
 
-    This command starts the Vue app at `http://localhost:3000`, the Azure Functions app at `http://localhost:7071`, and Static Web Apps at `http://localhost:4280`.
+    Navigate to `http://localhost:4280` to run the application locally.
 
     <details>
     <summary>If these ports are already in use, please change them in the `package.json` file or start the apps individually.  </summary>
@@ -102,7 +102,7 @@ For more info developing Static Web Apps locally see the [official Azure docs](h
     npm run dev
     ```
 
-    The Vue app will be available at `http://localhost:3000`.
+    The Vue app will be available at `http://localhost:5173`.
 
     B. To start the Azure Functions runtime, run this in the `api` folder of the repository:
 
@@ -115,7 +115,7 @@ For more info developing Static Web Apps locally see the [official Azure docs](h
     C. To start the Static Web App emulator, run this in the root of the repository:
 
     ```cmd
-    swa start http://localhost:3000 --api-location http://localhost:7071
+    swa start http://localhost:5173 --api-location http://localhost:7071
     ```
 
     </details>
@@ -137,12 +137,11 @@ This repository has code tours that guide you through the files and folders in t
 
 ## More info
 
-Want more information about this sample or using Ably in general? Feel free to contact me via Twitter [@marcduiker](https://twitter.com/marcduiker).
+Want more information about this sample or using Ably in general? Feel free to contact me on [Discord](http://go.ably.com/discord).
 
-- [Join our Discord server](https://discord.gg/q89gDHZcBK)
+- [Join our Discord server](http://go.ably.com/discord)
 - [Follow us on Twitter](https://twitter.com/ablyrealtime)
-- [Use our SDKs](https://github.com/ably/)
-- [Visit our website](https://ably.com)
+- [Visit our website](https://ably.com?utm_campaign=GLB-2201-agile-flush&utm_content=repo-agile-flush&utm_source=github&utm_medium=repo&src=GLB-2201-agile-flush-github)
 
 ---
-[![Ably logo](https://static.ably.dev/badge-black.svg?agile-flush-vue-app)](https://ably.com)
+[![Ably logo](https://static.ably.dev/badge-black.svg?agile-flush-vue-app)](https://ably.com?utm_campaign=GLB-2201-agile-flush&utm_content=repo-agile-flush&utm_source=github&utm_medium=repo&src=GLB-2201-agile-flush-github)
